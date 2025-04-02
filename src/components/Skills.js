@@ -54,10 +54,13 @@ const Skills = ({ isLightMode }) => {
 
     const unlockSkill = () => {
         if (unlockedSkills.length >= skills.length) return;
-        let randomIndex;
-        do {
-            randomIndex = Math.floor(Math.random() * skills.length);
-        } while (unlockedSkills.find((s) => s.index === randomIndex));
+        const usedIndexes = new Set(unlockedSkills.map((s) => s.index));
+        const availableIndexes = skills.map((_, i) => i).filter((i) => !usedIndexes.has(i));
+
+        if (availableIndexes.length === 0) return;
+
+        const randomIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+
         const newPos = generateUniquePosition(unlockedSkills.map((s) => s.position));
         setUnlockedSkills([...unlockedSkills, { index: randomIndex, position: newPos }]);
     };

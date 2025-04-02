@@ -6,7 +6,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     const targetWord = 'BRANDING';
     const [displayText, setDisplayText] = useState('');
     const headerRef = useRef(null);
-    // Use a ref to track the current (smoothed) letter count
     const currentLetterCount = useRef(0);
     const scrollRequestId = useRef(null);
 
@@ -31,7 +30,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
         let progress = (scrollY - start) / height;
         progress = Math.min(Math.max(progress, 0), 1);
-        // Cubic ease-out for smoother transition.
         const easedProgress = 1 - Math.pow(1 - progress, 3);
         const targetCount = easedProgress * targetWord.length;
         const newCount =
@@ -41,20 +39,20 @@ const Header = ({ isLightMode, toggleLightMode }) => {
         setDisplayText(targetWord.substring(0, clampedLength));
     };
 
-    const scrollHandler = () => {
-        scrollRequestId.current = requestAnimationFrame(updateText);
-    };
+
 
     useEffect(() => {
+        const scrollHandler = () => {
+            scrollRequestId.current = requestAnimationFrame(updateText);
+        };
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-                        // When header is visible, attach scroll/resize listeners.
+
                         window.addEventListener('scroll', scrollHandler, { passive: true });
                         window.addEventListener('resize', scrollHandler);
                     } else {
-                        // When header is out of view, remove the listeners.
                         window.removeEventListener('scroll', scrollHandler);
                         window.removeEventListener('resize', scrollHandler);
                     }

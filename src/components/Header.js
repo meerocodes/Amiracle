@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import LightModeLogo from '../../src/finalLogoLightMode.svg';
 import DarkModeLogo from '../../src/finalLogoDarkMode.svg';
 
+// Move the words array outside the component for stability.
+const words = ['BRANDING', 'STORYTELLING', 'INNOVATION', 'CREATIVITY'];
+
 const Header = ({ isLightMode, toggleLightMode }) => {
-    // Array of words to cycle through.
-    const words = ['BRANDING', 'STORYTELLING', 'INNOVATION', 'CREATIVITY'];
     const [displayText, setDisplayText] = useState('');
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -16,7 +17,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
         const handleTyping = () => {
             if (!isDeleting) {
-                // Add one more letter.
                 const nextText = currentWord.substring(0, displayText.length + 1);
                 setDisplayText(nextText);
                 if (nextText === currentWord) {
@@ -36,7 +36,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
         const timer = setTimeout(handleTyping, typingSpeed);
         return () => clearTimeout(timer);
-    }, [displayText, isDeleting, currentWordIndex, words]);
+    }, [displayText, isDeleting, currentWordIndex]);
 
     const [isHamburgerActive, setIsHamburgerActive] = useState(false);
     const toggleHamburger = () => setIsHamburgerActive((prev) => !prev);
@@ -81,7 +81,8 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 className="w-12 h-6 bg-gray-600 rounded-full cursor-pointer relative transition-colors duration-300"
                             >
                                 <div
-                                    className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'}`}
+                                    className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'
+                                        }`}
                                 ></div>
                             </div>
                             <span className="ml-2 text-white text-sm">
@@ -137,7 +138,8 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 >
                                     <div className="w-12 h-6 bg-gray-600 rounded-full relative transition-colors duration-300">
                                         <div
-                                            className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'}`}
+                                            className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'
+                                                }`}
                                         ></div>
                                     </div>
                                     <span className="text-xl">
@@ -150,6 +152,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </div>
             )}
 
+            {/* New typewriter text on bottom left with fixed min-width */}
             <div className="absolute bottom-0 left-0 p-4">
                 <span
                     className="text-white text-sm font-mono inline-block"
@@ -174,10 +177,15 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         onMouseLeave={() => setShowTooltip(false)}
                         onClick={() => setShowTooltip((prev) => !prev)}
                     >
-                        <span className="text-white text-lg font-bold" style={{
-                            minWidth: '12ch',
-                            color: isLightMode ? 'black' : 'white'
-                        }}>?</span>
+                        <span
+                            className="text-white text-lg font-bold"
+                            style={{
+                                minWidth: '12ch',
+                                color: isLightMode ? 'black' : 'white'
+                            }}
+                        >
+                            ?
+                        </span>
                         {showTooltip && (
                             <div className="absolute -top-10 right-0 w-48 p-2 text-xs text-white bg-gray-900 rounded shadow-lg">
                                 The order has no significance, just thought it looks cooler that way!

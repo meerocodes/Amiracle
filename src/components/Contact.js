@@ -1,6 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const Contact = ({ isLightMode }) => {
+    const titleRef = useRef(null);
+    const cardRef = useRef(null);
+    const [titleVisible, setTitleVisible] = useState(false);
+    const [cardVisible, setCardVisible] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.target === titleRef.current && entry.isIntersecting) {
+                        setTitleVisible(true);
+                    }
+                    if (entry.target === cardRef.current && entry.isIntersecting) {
+                        setCardVisible(true);
+                    }
+                });
+            },
+            { threshold: 0.3 }
+        );
+
+        if (titleRef.current) observer.observe(titleRef.current);
+        if (cardRef.current) observer.observe(cardRef.current);
+
+        return () => {
+            if (titleRef.current) observer.unobserve(titleRef.current);
+            if (cardRef.current) observer.unobserve(cardRef.current);
+        };
+    }, []);
+
     return (
         <section
             id="contact"
@@ -9,84 +38,149 @@ const Contact = ({ isLightMode }) => {
                     : 'bg-[url(/assets/sectionImage3.png)]'
                 }`}
         >
-            {/* Background overlay */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div className="absolute inset-0"></div>
             <div className="relative w-4/5 mx-auto flex flex-col items-center">
                 <h2
-                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg ${isLightMode
-                            ? 'text-gray-900 underline decoration-gray-700'
-                            : 'text-white'
+                    ref={titleRef}
+                    className={`p-10 text-4xl font-mono font-bold drop-shadow-lg transition-all duration-500 delay-100 ${titleVisible
+                            ? isLightMode
+                                ? 'opacity-100 translate-x-0 text-gray-900 underline decoration-gray-700'
+                                : 'opacity-100 translate-x-0 text-white'
+                            : 'opacity-0 -translate-x-[100vw]'
                         }`}
                 >
                     {'<GET IN TOUCH />'}
                 </h2>
-                <form
-                    action="https://formspree.io/f/xeqwljbo"
-                    method="POST"
-                    className={`mt-12 w-full max-w-lg rounded-lg p-8 backdrop-blur-sm shadow-lg transition-all duration-300 border border-dashed ${isLightMode
-                            ? 'bg-gray-900/90 text-white border-gray-700'
-                            : 'bg-white/90 text-black border-gray-300'
+                <div
+                    ref={cardRef}
+                    className={`pokemon-card relative rounded-xl p-4 mt-8 w-full max-w-lg shadow-2xl border-4 border-double transition-all duration-300 ${isLightMode
+                            ? 'bg-gradient-to-br from-blue-100 to-green-100 border-blue-400'
+                            : 'bg-gradient-to-br from-yellow-300 to-red-500 border-gray-800'
                         }`}
                 >
-                    <p className="font-mono text-xs mb-4">
-                    </p>
-                    <div className="form-group flex flex-col mb-5">
-                        <label htmlFor="name" className="sr-only">
-                            Name:
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            placeholder="// Name"
-                            required
-                            className={`p-3 rounded-lg border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isLightMode
-                                    ? 'bg-gray-800 border-gray-700 placeholder-gray-300 text-white'
-                                    : 'bg-white border-gray-300 placeholder-gray-500 text-black'
+                    <div className="card-header flex justify-between items-center mb-4">
+                        <h2
+                            className={`font-bold font-mono text-2xl drop-shadow-lg transition-all duration-500 delay-200 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 -translate-x-[100vw]'
                                 }`}
-                        />
-                    </div>
-                    <div className="form-group flex flex-col mb-5">
-                        <label htmlFor="email" className="sr-only">
-                            Email:
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            placeholder="// Email"
-                            required
-                            className={`p-3 rounded-lg border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isLightMode
-                                    ? 'bg-gray-800 border-gray-700 placeholder-gray-300 text-white'
-                                    : 'bg-white border-gray-300 placeholder-gray-500 text-black'
+                        >
+                            [Code Champion]
+                        </h2>
+                        <div
+                            className={`card-stats text-right transition-all duration-500 delay-300 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 translate-x-[100vw]'
                                 }`}
-                        />
+                        >
+                            <span className="block font-bold text-sm text-red-700">HP</span>
+                            <span className="block font-extrabold text-xl text-red-800">120</span>
+                        </div>
                     </div>
-                    <div className="form-group flex flex-col mb-5">
-                        <label htmlFor="message" className="sr-only">
-                            Message:
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            placeholder="// Message"
-                            required
-                            className={`p-3 rounded-lg border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 h-40 resize-none ${isLightMode
-                                    ? 'bg-gray-800 border-gray-700 placeholder-gray-300 text-white'
-                                    : 'bg-white border-gray-300 placeholder-gray-500 text-black'
-                                }`}
-                        ></textarea>
-                    </div>
-                    <button
-                        type="submit"
-                        className={`w-full p-3 rounded-lg font-mono font-semibold transition-transform duration-300 transform hover:scale-105 ${isLightMode
-                                ? 'bg-gradient-to-r from-black to-gray-900 text-white hover:from-gray-800 hover:to-black'
-                                : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+                    <form
+                        action="https://formspree.io/f/xeqwljbo"
+                        method="POST"
+                        className={`w-full rounded-lg p-6 backdrop-blur-sm shadow-inner transition-all duration-300 border ${isLightMode
+                                ? 'bg-white/90 text-black border-gray-300'
+                                : 'bg-gray-900/90 text-white border-gray-700'
                             }`}
                     >
-                        SEND
-                    </button>
-                </form>
+                        {/* Name Field (from left) */}
+                        <div
+                            className={`form-group flex flex-col mb-4 transition-all duration-500 delay-400 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 -translate-x-[100vw]'
+                                }`}
+                        >
+                            <label htmlFor="name" className="sr-only">
+                                Name:
+                            </label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="// Name"
+                                required
+                                className={`p-3 rounded-full border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isLightMode
+                                        ? 'bg-gray-100 border-gray-300 placeholder-gray-500 text-gray-800'
+                                        : 'bg-gray-800 border-gray-700 placeholder-gray-400 text-white'
+                                    }`}
+                            />
+                        </div>
+                        <div
+                            className={`form-group flex flex-col mb-4 transition-all duration-500 delay-500 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 translate-x-[100vw]'
+                                }`}
+                        >
+                            <label htmlFor="email" className="sr-only">
+                                Email:
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="// Email"
+                                required
+                                className={`p-3 rounded-full border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isLightMode
+                                        ? 'bg-gray-100 border-gray-300 placeholder-gray-500 text-gray-800'
+                                        : 'bg-gray-800 border-gray-700 placeholder-gray-400 text-white'
+                                    }`}
+                            />
+                        </div>
+                        <div
+                            className={`form-group flex flex-col mb-4 transition-all duration-500 delay-600 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 -translate-x-[100vw]'
+                                }`}
+                        >
+                            <label htmlFor="message" className="sr-only">
+                                Message:
+                            </label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                placeholder="// Message"
+                                required
+                                className={`p-3 rounded-lg border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 h-32 resize-none ${isLightMode
+                                        ? 'bg-gray-100 border-gray-300 placeholder-gray-500 text-gray-800'
+                                        : 'bg-gray-800 border-gray-700 placeholder-gray-400 text-white'
+                                    }`}
+                            ></textarea>
+                        </div>
+                        <button
+                            type="submit"
+                            className={`w-full p-3 rounded-full font-mono font-semibold transition-transform duration-500 transform ${cardVisible
+                                    ? 'opacity-100 translate-x-0 hover:scale-105'
+                                    : 'opacity-0 translate-x-[100vw]'
+                                } ${isLightMode
+                                    ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:from-blue-600 hover:to-green-600'
+                                    : 'bg-gradient-to-r from-gray-500 to-red-600 text-white hover:from-purple-600 hover:to-pink-600'
+                                }`}
+                        >
+                            LAUNCH CODE BLAST
+                        </button>
+                    </form>
+                    {/* Card Footer */}
+                    <div className="card-footer mt-4 flex justify-between items-center text-xs italic">
+                        <span
+                            className={`transition-all duration-500 delay-800 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 -translate-x-[100vw]'
+                                } ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}
+                        >
+                            Type: Debugger
+                        </span>
+                        <span
+                            className={`transition-all duration-500 delay-900 ${cardVisible
+                                    ? 'opacity-100 translate-x-0'
+                                    : 'opacity-0 translate-x-[100vw]'
+                                } ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}
+                        >
+                            Lvl 99
+                        </span>
+                    </div>
+                </div>
             </div>
         </section>
     );

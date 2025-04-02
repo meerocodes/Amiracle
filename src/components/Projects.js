@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const projectsData = [
     {
@@ -47,6 +47,112 @@ const projectsData = [
     },
 ];
 
+const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
+    const cardRef = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                    observer.unobserve(entry.target);
+                }
+            },
+            { threshold: 0.1 }
+        );
+        if (cardRef.current) {
+            observer.observe(cardRef.current);
+        }
+        return () => {
+            if (cardRef.current) observer.unobserve(cardRef.current);
+        };
+    }, []);
+
+    const xp = (totalProjects - index) * 500;
+    const life = Math.round(((totalProjects - index) / totalProjects) * 100);
+
+    return (
+        <div
+            ref={cardRef}
+            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                } mb-16`}
+            style={{ transitionDelay: `${index * 100}ms` }}
+        >
+            <div className="group w-full h-96 md:h-80" style={{ perspective: '1000px' }}>
+                <div className="relative w-full h-full transition-transform duration-700" style={{ transformStyle: 'preserve-3d' }}>
+                    {/* Front Side: GIF Preview */}
+                    <div className="absolute w-full h-full" style={{ backfaceVisibility: 'hidden' }}>
+                        <img
+                            src={`${process.env.PUBLIC_URL}${project.image}`}
+                            alt={project.alt}
+                            className="w-full h-full object-cover rounded-lg transition-transform duration-500 hover:scale-105"
+                        />
+                    </div>
+                    <div
+                        className="absolute w-full h-full bg-gradient-to-b from-yellow-200 to-yellow-400 text-gray-900 flex flex-col justify-between p-4 rounded-lg border-4 border-yellow-500 shadow-lg overflow-auto"
+                        style={{
+                            backfaceVisibility: 'hidden',
+                            transform: 'rotateY(180deg)',
+                        }}
+                    >
+                        <div className="flex justify-between items-center mb-2">
+                            <div className="w-12 h-12">
+                                <img
+                                    src={`${process.env.PUBLIC_URL}/assets/logo.png`}
+                                    alt="Logo"
+                                    className="object-contain"
+                                />
+                            </div>
+                            <span className="text-xs font-bold tracking-wide uppercase">Project</span>
+                        </div>
+                        <div className="text-center mb-2">
+                            <h4 className="mb-1 text-lg font-bold font-mono">{project.tech}</h4>
+                            <p className="text-xs font-mono">{project.description}</p>
+                        </div>
+                        <div className="space-y-2 mb-2">
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-mono">XP Gained:</span>
+                                <span className="text-xs font-mono font-bold">{xp} XP</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-mono">Life Left:</span>
+                                <div className="w-32 bg-gray-300 rounded-full h-2">
+                                    <div className="bg-green-500 h-2 rounded-full" style={{ width: `${life}%` }}></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex justify-around">
+                            <a
+                                href={project.repo}
+                                className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:scale-105 transition-transform"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                View Repo
+                            </a>
+                            <a
+                                href={project.live}
+                                className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:scale-105 transition-transform"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {/* Hover Trigger for Flip */}
+                <style jsx>{`
+          .group:hover > div {
+            transform: rotateY(180deg);
+          }
+        `}</style>
+            </div>
+        </div>
+    );
+};
+
 const Projects = ({ isLightMode }) => {
     return (
         <section
@@ -58,9 +164,7 @@ const Projects = ({ isLightMode }) => {
         >
             <div className="w-11/12 sm:w-4/5 mx-auto flex flex-col items-center">
                 <h2
-                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg ${isLightMode
-                            ? 'text-gray-900 underline decoration-gray-700'
-                            : 'text-white'
+                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'
                         }`}
                 >
                     {'<PROJECTS />'}
@@ -70,117 +174,16 @@ const Projects = ({ isLightMode }) => {
                     className={`fa-solid fa-angle-down mt-4 text-2xl ${isLightMode ? 'text-gray-900' : 'text-white'
                         }`}
                 ></i>
-                <div className="mt-12 space-y-16 w-full">
-                    {projectsData.map((project, index) => {
-                        const totalProjects = projectsData.length;
-                        // Higher-ranked projects (lower index) get higher XP
-                        const xp = (totalProjects - index) * 500;
-                        // Life percentage decreases for lower-ranked projects
-                        const life = Math.round(((totalProjects - index) / totalProjects) * 100);
-                        return (
-                            <div
-                                key={project.id}
-                                className={`relative w-full sm:w-11/12 md:w-2/3 lg:w-1/2 mx-auto ${project.align === 'right' ? 'sm:ml-auto' : 'sm:mr-auto'
-                                    } mb-16`}
-                            >
-                                <div
-                                    className="group w-full h-96 md:h-80"
-                                    style={{ perspective: '1000px' }}
-                                >
-                                    <div
-                                        className="relative w-full h-full transition-transform duration-700"
-                                        style={{ transformStyle: 'preserve-3d' }}
-                                    >
-                                        {/* Front Side: GIF Preview */}
-                                        <div
-                                            className="absolute w-full h-full"
-                                            style={{ backfaceVisibility: 'hidden' }}
-                                        >
-                                            <img
-                                                src={`${process.env.PUBLIC_URL}${project.image}`}
-                                                alt={project.alt}
-                                                className="w-full h-full object-cover rounded-lg transition-transform duration-500 hover:scale-105"
-                                            />
-                                        </div>
-                                        {/* Back Side - Project Details Card */}
-                                        <div
-                                            className="absolute w-full h-full bg-gradient-to-b from-yellow-200 to-yellow-400 text-gray-900 flex flex-col justify-between p-4 rounded-lg border-4 border-yellow-500 shadow-lg overflow-auto"
-                                            style={{
-                                                backfaceVisibility: 'hidden',
-                                                transform: 'rotateY(180deg)',
-                                            }}
-                                        >
-                                            {/* Header with Logo and PROJECT label */}
-                                            <div className="flex justify-between items-center mb-2">
-                                                <div className="w-12 h-12">
-                                                    <img
-                                                        src={`${process.env.PUBLIC_URL}/assets/logo.png`}
-                                                        alt="Logo"
-                                                        className="object-contain"
-                                                    />
-                                                </div>
-                                                <span className="text-xs font-bold tracking-wide uppercase">
-                                                    Project
-                                                </span>
-                                            </div>
-                                            {/* Project Details */}
-                                            <div className="text-center mb-2">
-                                                <h4 className="mb-1 text-lg font-bold font-mono">
-                                                    {project.tech}
-                                                </h4>
-                                                <p className="text-xs font-mono">
-                                                    {project.description}
-                                                </p>
-                                            </div>
-                                            {/* Game-like Stats (Unique per project) */}
-                                            <div className="space-y-2 mb-2">
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-xs font-mono">XP Gained:</span>
-                                                    <span className="text-xs font-mono font-bold">
-                                                        {xp} XP
-                                                    </span>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-xs font-mono">Life Left:</span>
-                                                    <div className="w-32 bg-gray-300 rounded-full h-2">
-                                                        <div
-                                                            className="bg-green-500 h-2 rounded-full"
-                                                            style={{ width: `${life}%` }}
-                                                        ></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {/* Action Buttons */}
-                                            <div className="flex justify-around">
-                                                <a
-                                                    href={project.repo}
-                                                    className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:scale-105 transition-transform"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    View Repo
-                                                </a>
-                                                <a
-                                                    href={project.live}
-                                                    className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:scale-105 transition-transform"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                >
-                                                    Live Demo
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Hover Trigger for Flip */}
-                                    <style jsx>{`
-                    .group:hover > div {
-                      transform: rotateY(180deg);
-                    }
-                  `}</style>
-                                </div>
-                            </div>
-                        );
-                    })}
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16 w-full">
+                    {projectsData.map((project, index) => (
+                        <ProjectCard
+                            key={project.id}
+                            project={project}
+                            index={index}
+                            totalProjects={projectsData.length}
+                            isLightMode={isLightMode}
+                        />
+                    ))}
                 </div>
             </div>
         </section>

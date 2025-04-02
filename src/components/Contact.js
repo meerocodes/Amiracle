@@ -7,13 +7,16 @@ const Contact = ({ isLightMode }) => {
     const [cardVisible, setCardVisible] = useState(false);
 
     useEffect(() => {
+        const titleElement = titleRef.current;
+        const cardElement = cardRef.current;
+
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
-                    if (entry.target === titleRef.current && entry.isIntersecting) {
+                    if (entry.target === titleElement && entry.isIntersecting) {
                         setTitleVisible(true);
                     }
-                    if (entry.target === cardRef.current && entry.isIntersecting) {
+                    if (entry.target === cardElement && entry.isIntersecting) {
                         setCardVisible(true);
                     }
                 });
@@ -21,12 +24,12 @@ const Contact = ({ isLightMode }) => {
             { threshold: 0.3 }
         );
 
-        if (titleRef.current) observer.observe(titleRef.current);
-        if (cardRef.current) observer.observe(cardRef.current);
+        if (titleElement) observer.observe(titleElement);
+        if (cardElement) observer.observe(cardElement);
 
         return () => {
-            if (titleRef.current) observer.unobserve(titleRef.current);
-            if (cardRef.current) observer.unobserve(cardRef.current);
+            if (titleElement) observer.unobserve(titleElement);
+            if (cardElement) observer.unobserve(cardElement);
         };
     }, []);
 

@@ -61,11 +61,14 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
             },
             { threshold: 0.1 }
         );
-        if (cardRef.current) {
-            observer.observe(cardRef.current);
+        const currentCard = cardRef.current;
+        if (currentCard) {
+            observer.observe(currentCard);
         }
         return () => {
-            if (cardRef.current) observer.unobserve(cardRef.current);
+            if (currentCard) {
+                observer.unobserve(currentCard);
+            }
         };
     }, []);
 
@@ -75,12 +78,12 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
     return (
         <div
             ref={cardRef}
-            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} mb-16`}
+            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                } mb-16`}
             style={{ transitionDelay: `${index * 100}ms` }}
         >
             <div className="group w-full h-96 md:h-80" style={{ perspective: '1000px' }}>
                 <div className="relative w-full h-full transition-transform duration-700" style={{ transformStyle: 'preserve-3d' }}>
-                    {/* Front Side: GIF Preview */}
                     <div className="absolute w-full h-full" style={{ backfaceVisibility: 'hidden' }}>
                         <img
                             src={`${process.env.PUBLIC_URL}${project.image}`}
@@ -152,7 +155,6 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
 };
 
 const Projects = ({ isLightMode }) => {
-    // Dynamic typing effect for "Jack of all Trades"
     const sectionRef = useRef(null);
     const dynamicTarget = "Jack of all Trades";
     const [displayText, setDisplayText] = useState("");
@@ -164,7 +166,6 @@ const Projects = ({ isLightMode }) => {
                 const sectionTop = sectionRef.current.offsetTop;
                 const sectionHeight = sectionRef.current.offsetHeight;
                 const scrollY = window.scrollY;
-                // Use a lower factor on mobile to slow the typing effect
                 const factor = window.innerWidth < 768 ? 1.3 : 2;
                 let progress = (scrollY - sectionTop) / sectionHeight;
                 progress = Math.min(Math.max(progress * factor, 0), 1);

@@ -99,7 +99,7 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
                         <div className="flex justify-between items-center mb-2">
                             <div className="w-12 h-12">
                                 <img
-                                    src={`${process.env.PUBLIC_URL}/assets/logo.png`}
+                                    src={`${process.env.PUBLIC_URL}/finalLogoLightMode.svg`}
                                     alt="Logo"
                                     className="object-contain"
                                 />

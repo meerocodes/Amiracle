@@ -65,6 +65,7 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
             observer.observe(cardRef.current);
         }
         return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             if (cardRef.current) observer.unobserve(cardRef.current);
         };
     }, []);

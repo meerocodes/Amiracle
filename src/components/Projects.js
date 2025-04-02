@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 const projectsData = [
     {
@@ -49,9 +49,9 @@ const projectsData = [
 
 const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
     const cardRef = useRef(null);
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible, setIsVisible] = React.useState(false);
 
-    useEffect(() => {
+    React.useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -156,27 +156,6 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
 
 const Projects = ({ isLightMode }) => {
     const sectionRef = useRef(null);
-    const dynamicTarget = "Jack of all Trades";
-    const [displayText, setDisplayText] = useState("");
-
-    useEffect(() => {
-        let animationFrameId;
-        const updateText = () => {
-            if (sectionRef.current) {
-                const sectionTop = sectionRef.current.offsetTop;
-                const sectionHeight = sectionRef.current.offsetHeight;
-                const scrollY = window.scrollY;
-                const factor = window.innerWidth < 768 ? 1.3 : 2;
-                let progress = (scrollY - sectionTop) / sectionHeight;
-                progress = Math.min(Math.max(progress * factor, 0), 1);
-                const charCount = Math.round(progress * dynamicTarget.length);
-                setDisplayText(dynamicTarget.substring(0, charCount));
-            }
-            animationFrameId = requestAnimationFrame(updateText);
-        };
-        animationFrameId = requestAnimationFrame(updateText);
-        return () => cancelAnimationFrame(animationFrameId);
-    }, [dynamicTarget]);
 
     return (
         <section
@@ -210,17 +189,6 @@ const Projects = ({ isLightMode }) => {
                         />
                     ))}
                 </div>
-            </div>
-
-            <div className="w-full text-left mt-12">
-                <h1
-                    className="text-white opacity-20 font-bold leading-none overflow-hidden transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[8rem] xl:text-[10rem]"
-                    style={{
-                        textShadow: isLightMode ? '1px 1px 2px rgba(0,0,0,0.5)' : 'none'
-                    }}
-                >
-                    {displayText}
-                </h1>
             </div>
         </section>
     );

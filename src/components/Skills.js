@@ -1,29 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 
 const Skills = ({ isLightMode }) => {
-    // Reference to the section for dynamic text effect
     const sectionRef = useRef(null);
-
-    const dynamicTarget = "STORYTELLING";
-    const [bgText, setBgText] = useState("");
-    const speedFactor = 2;
-    useEffect(() => {
-        let animationFrameId;
-        const updateText = () => {
-            if (sectionRef.current) {
-                const sectionTop = sectionRef.current.offsetTop;
-                const sectionHeight = sectionRef.current.offsetHeight;
-                const scrollY = window.scrollY;
-                let progress = (scrollY - sectionTop) / sectionHeight;
-                progress = Math.min(Math.max(progress * speedFactor, 0), 1);
-                const charCount = Math.round(progress * dynamicTarget.length);
-                setBgText(dynamicTarget.substring(0, charCount));
-            }
-            animationFrameId = requestAnimationFrame(updateText);
-        };
-        animationFrameId = requestAnimationFrame(updateText);
-        return () => cancelAnimationFrame(animationFrameId);
-    }, [dynamicTarget, speedFactor]);
 
     // Group skills into categories
     const groupedSkills = {
@@ -66,20 +44,21 @@ const Skills = ({ isLightMode }) => {
         }
     };
 
+    // Reverse the order so the new unlocked category appears at the top.
+    const unlockedCategories = categoryOrder.slice(0, unlockedCategoryCount).reverse();
+
     return (
         <section
             id="skills"
             ref={sectionRef}
-            className={`relative overflow-x-hidden border-t-8 transition-all duration-500 bg-cover bg-fixed min-h-screen ${isLightMode
+            className={`relative border-t-8 transition-all duration-500 bg-cover min-h-screen overflow-x-hidden ${isLightMode
                     ? 'bg-[url(/assets/lightMode/lightSectionImage2.png)]'
                     : 'bg-[url(/assets/sectionImage2.png)]'
                 }`}
         >
             <div className="relative w-11/12 sm:w-4/5 mx-auto flex flex-col items-center py-12">
                 <h2
-                    className={`text-4xl font-mono font-bold drop-shadow-lg ${isLightMode
-                            ? 'text-gray-900 underline decoration-gray-700'
-                            : 'text-white'
+                    className={`text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'
                         }`}
                 >
                     {'<SKILLS />'}
@@ -100,7 +79,7 @@ const Skills = ({ isLightMode }) => {
             </div>
 
             <div className="relative z-10 w-full max-w-6xl mx-auto space-y-8 px-4 py-12">
-                {categoryOrder.slice(0, unlockedCategoryCount).map((category) => (
+                {unlockedCategories.map((category) => (
                     <div
                         key={category}
                         className={`p-4 border rounded-lg shadow-lg transition-all duration-300 ${isLightMode ? 'bg-white/80 border-gray-300' : 'bg-gray-800 border-gray-700'
@@ -113,7 +92,7 @@ const Skills = ({ isLightMode }) => {
                             {groupedSkills[category].map((skill, i) => (
                                 <div
                                     key={i}
-                                    className="relative group flex flex-col items-center cursor-pointer"
+                                    className="relative group flex flex-col items-center cursor-pointer w-24 text-center"
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >
                                     <i
@@ -136,18 +115,42 @@ const Skills = ({ isLightMode }) => {
                 ))}
             </div>
 
-            {/* Dynamic "STORYTELLING" Text at the bottom, left-aligned */}
-            <div className="absolute bottom-0 left-0 p-4 z-50">
-                <h1
-                    className="opacity-20 font-bold leading-none overflow-hidden transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[8rem] xl:text-[10rem] text-left"
-                    style={{
-                        color: 'white',
-                        textShadow: isLightMode ? '1px 5px 2px rgba(0, 0, 0, 0.9)' : 'none'
-                    }}
-                >
-                    {bgText}
-                </h1>
-            </div>
+            <style jsx>{`
+                @keyframes flyInLeft {
+                  0% {
+                    transform: translateX(-100vw) rotate(-30deg) scale(0.5);
+                    opacity: 0;
+                  }
+                  50% {
+                    transform: translateX(10vw) rotate(10deg) scale(1.1);
+                    opacity: 0.8;
+                  }
+                  100% {
+                    transform: translateX(0) rotate(0deg) scale(1);
+                    opacity: 1;
+                  }
+                }
+                @keyframes flyInRight {
+                  0% {
+                    transform: translateX(100vw) rotate(30deg) scale(0.5);
+                    opacity: 0;
+                  }
+                  50% {
+                    transform: translateX(-10vw) rotate(-10deg) scale(1.1);
+                    opacity: 0.8;
+                  }
+                  100% {
+                    transform: translateX(0) rotate(0deg) scale(1);
+                    opacity: 1;
+                  }
+                }
+                .animate-flyInLeft {
+                  animation: flyInLeft 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+                }
+                .animate-flyInRight {
+                  animation: flyInRight 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+                }
+            `}</style>
         </section>
     );
 };

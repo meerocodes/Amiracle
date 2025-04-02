@@ -58,7 +58,7 @@ const Contact = ({ isLightMode }) => {
                     ref={cardRef}
                     className={`pokemon-card relative rounded-xl p-4 mt-8 w-full max-w-lg shadow-2xl border-4 border-double transition-all duration-300 ${isLightMode
                         ? 'bg-gradient-to-br from-blue-100 to-green-100 border-blue-400'
-                        : 'bg-gradient-to-br from-yellow-300 to-red-500 border-gray-800'
+                        : 'bg-gradient-to-br from-yellow-300 to-green-900 border-gray-800'
                         }`}
                 >
                     <div className="card-header flex justify-between items-center mb-4">
@@ -88,7 +88,6 @@ const Contact = ({ isLightMode }) => {
                             : 'bg-gray-900/90 text-white border-gray-700'
                             }`}
                     >
-                        {/* Name Field (from left) */}
                         <div
                             className={`form-group flex flex-col mb-4 transition-all duration-500 delay-400 ${cardVisible
                                 ? 'opacity-100 translate-x-0'
@@ -158,13 +157,12 @@ const Contact = ({ isLightMode }) => {
                                 : 'opacity-0 translate-x-[100vw]'
                                 } ${isLightMode
                                     ? 'bg-gradient-to-r from-blue-500 to-green-500 text-white hover:from-blue-600 hover:to-green-600'
-                                    : 'bg-gradient-to-r from-gray-500 to-red-600 text-white hover:from-purple-600 hover:to-pink-600'
+                                    : 'bg-gradient-to-r from-gray-500 to-green-500 text-white hover:from-gray-400 hover:to-gray-600'
                                 }`}
                         >
                             LAUNCH CODE BLAST
                         </button>
                     </form>
-                    {/* Card Footer */}
                     <div className="card-footer mt-4 flex justify-between items-center text-xs italic">
                         <span
                             className={`transition-all duration-500 delay-800 ${cardVisible

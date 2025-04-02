@@ -1,30 +1,42 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import LightModeLogo from '../../src/finalLogoLightMode.svg';
 import DarkModeLogo from '../../src/finalLogoDarkMode.svg';
 
 const Header = ({ isLightMode, toggleLightMode }) => {
-    const targetWord = 'BRANDING';
+    // Array of words to cycle through.
+    const words = ['BRANDING', 'STORYTELLING', 'INNOVATION', 'CREATIVITY'];
     const [displayText, setDisplayText] = useState('');
-    const headerRef = useRef(null);
-    const speedFactor = 3;
+    const [currentWordIndex, setCurrentWordIndex] = useState(0);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
 
     useEffect(() => {
-        let animationFrameId;
-        const updateText = () => {
-            if (headerRef.current) {
-                const sectionTop = headerRef.current.offsetTop;
-                const sectionHeight = headerRef.current.offsetHeight;
-                const scrollY = window.scrollY;
-                let progress = (scrollY - sectionTop) / sectionHeight;
-                progress = Math.min(Math.max(progress * speedFactor, 0), 1);
-                const charCount = Math.round(progress * targetWord.length);
-                setDisplayText(targetWord.substring(0, charCount));
+        const currentWord = words[currentWordIndex];
+        const typingSpeed = isDeleting ? 100 : 200;
+
+        const handleTyping = () => {
+            if (!isDeleting) {
+                // Add one more letter.
+                const nextText = currentWord.substring(0, displayText.length + 1);
+                setDisplayText(nextText);
+                if (nextText === currentWord) {
+                    setTimeout(() => {
+                        setIsDeleting(true);
+                    }, 1000);
+                }
+            } else {
+                const nextText = currentWord.substring(0, displayText.length - 1);
+                setDisplayText(nextText);
+                if (nextText === '') {
+                    setIsDeleting(false);
+                    setCurrentWordIndex((currentWordIndex + 1) % words.length);
+                }
             }
-            animationFrameId = requestAnimationFrame(updateText);
         };
-        animationFrameId = requestAnimationFrame(updateText);
-        return () => cancelAnimationFrame(animationFrameId);
-    }, [targetWord, speedFactor]);
+
+        const timer = setTimeout(handleTyping, typingSpeed);
+        return () => clearTimeout(timer);
+    }, [displayText, isDeleting, currentWordIndex, words]);
 
     const [isHamburgerActive, setIsHamburgerActive] = useState(false);
     const toggleHamburger = () => setIsHamburgerActive((prev) => !prev);
@@ -38,7 +50,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
     return (
         <header
-            ref={headerRef}
             id="header"
             className={`relative bg-cover h-[100dvh] transition-all duration-500 ${isLightMode
                     ? 'bg-[url(/assets/lightMode/lightMainHeader.png)]'
@@ -70,8 +81,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 className="w-12 h-6 bg-gray-600 rounded-full cursor-pointer relative transition-colors duration-300"
                             >
                                 <div
-                                    className={`w-6 h-6 bg-white rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'
-                                        }`}
+                                    className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'}`}
                                 ></div>
                             </div>
                             <span className="ml-2 text-white text-sm">
@@ -127,8 +137,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 >
                                     <div className="w-12 h-6 bg-gray-600 rounded-full relative transition-colors duration-300">
                                         <div
-                                            className={`w-6 h-6 bg-white rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'
-                                                }`}
+                                            className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'}`}
                                         ></div>
                                     </div>
                                     <span className="text-xl">
@@ -142,44 +151,63 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             )}
 
             <div className="absolute bottom-0 left-0 p-4">
-                <h1
-                    className="opacity-20 font-bold leading-none overflow-hidden transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[8rem] xl:text-[10rem] text-left"
+                <span
+                    className="text-white text-sm font-mono inline-block"
                     style={{
-                        color: 'white',
-                        textShadow: isLightMode ? '1px 5px 2px rgba(0, 0, 0, 0.9)' : 'none'
+                        minWidth: '12ch',
+                        textShadow: isLightMode ? '1px 2px 1px rgba(0,0,0,1)' : 'none'
                     }}
                 >
                     {displayText}
-                </h1>
+                </span>
             </div>
 
             <div
                 className="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 px-4"
                 style={{ perspective: '1000px' }}
             >
-                <div className="sliding-text-block four-words mr-6">
-                    <ul className="Words">
-                        <li className="Words-line">
-                            <p className="dev-3d">&nbsp;</p>
-                            <p>CEO</p>
-                        </li>
-                        <li className="Words-line">
-                            <p>CEO</p>
-                            <p>Web Developer</p>
-                        </li>
-                        <li className="Words-line">
-                            <p>Web Developer</p>
-                            <p>CREATOR</p>
-                        </li>
-                        <li className="Words-line">
-                            <p>CREATOR</p>
-                            <p>INNOVATOR</p>
-                        </li>
-                        <li className="Words-line">
-                            <p>INNOVATOR</p>
-                            <p className="dev-4">&nbsp;</p>
-                        </li>
-                    </ul>
+                <div className="relative">
+                    {/* Tooltip Icon */}
+                    <div
+                        className="absolute -top-6 -right-8 cursor-pointer"
+                        onMouseEnter={() => setShowTooltip(true)}
+                        onMouseLeave={() => setShowTooltip(false)}
+                        onClick={() => setShowTooltip((prev) => !prev)}
+                    >
+                        <span className="text-white text-lg font-bold" style={{
+                            minWidth: '12ch',
+                            color: isLightMode ? 'black' : 'white'
+                        }}>?</span>
+                        {showTooltip && (
+                            <div className="absolute -top-10 right-0 w-48 p-2 text-xs text-white bg-gray-900 rounded shadow-lg">
+                                The order has no significance, just thought it looks cooler that way!
+                            </div>
+                        )}
+                    </div>
+                    <div className="sliding-text-block four-words mr-20">
+                        <ul className="Words">
+                            <li className="Words-line">
+                                <p className="dev-3d">&nbsp;</p>
+                                <p>CEO</p>
+                            </li>
+                            <li className="Words-line">
+                                <p>CEO</p>
+                                <p>CREATOR</p>
+                            </li>
+                            <li className="Words-line">
+                                <p>CREATOR</p>
+                                <p>INNOVATOR</p>
+                            </li>
+                            <li className="Words-line">
+                                <p>INNOVATOR</p>
+                                <p>Web Developer</p>
+                            </li>
+                            <li className="Words-line">
+                                <p>Web Developer</p>
+                                <p className="dev-4">&nbsp;</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
@@ -245,20 +273,20 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             </div>
 
             <style jsx>{`
-        .animate-slide-in {
-          animation: slideIn 0.3s ease-out forwards;
-        }
-        @keyframes slideIn {
-          from {
-            transform: translateY(-20px);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-      `}</style>
+                .animate-slide-in {
+                    animation: slideIn 0.3s ease-out forwards;
+                }
+                @keyframes slideIn {
+                    from {
+                        transform: translateY(-20px);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateY(0);
+                        opacity: 1;
+                    }
+                }
+            `}</style>
         </header>
     );
 };

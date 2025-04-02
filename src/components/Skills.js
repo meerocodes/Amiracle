@@ -70,7 +70,7 @@ const Skills = ({ isLightMode }) => {
         <section
             id="skills"
             ref={sectionRef}
-            className={`relative border-t-8 transition-all duration-500 bg-cover min-h-screen ${isLightMode
+            className={`relative overflow-x-hidden border-t-8 transition-all duration-500 bg-cover bg-fixed min-h-screen ${isLightMode
                     ? 'bg-[url(/assets/lightMode/lightSectionImage2.png)]'
                     : 'bg-[url(/assets/sectionImage2.png)]'
                 }`}
@@ -136,7 +136,8 @@ const Skills = ({ isLightMode }) => {
                 ))}
             </div>
 
-            <div className="absolute bottom-0 left-0 p-4">
+            {/* Dynamic "STORYTELLING" Text at the bottom, left-aligned */}
+            <div className="absolute bottom-0 left-0 p-4 z-50">
                 <h1
                     className="opacity-20 font-bold leading-none overflow-hidden transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[8rem] xl:text-[10rem] text-left"
                     style={{
@@ -147,43 +148,6 @@ const Skills = ({ isLightMode }) => {
                     {bgText}
                 </h1>
             </div>
-
-            <style jsx>{`
-        @keyframes flyInLeft {
-          0% {
-            transform: translateX(-100vw) rotate(-30deg) scale(0.5);
-            opacity: 0;
-          }
-          50% {
-            transform: translateX(10vw) rotate(10deg) scale(1.1);
-            opacity: 0.8;
-          }
-          100% {
-            transform: translateX(0) rotate(0deg) scale(1);
-            opacity: 1;
-          }
-        }
-        @keyframes flyInRight {
-          0% {
-            transform: translateX(100vw) rotate(30deg) scale(0.5);
-            opacity: 0;
-          }
-          50% {
-            transform: translateX(-10vw) rotate(-10deg) scale(1.1);
-            opacity: 0.8;
-          }
-          100% {
-            transform: translateX(0) rotate(0deg) scale(1);
-            opacity: 1;
-          }
-        }
-        .animate-flyInLeft {
-          animation: flyInLeft 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-        }
-        .animate-flyInRight {
-          animation: flyInRight 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
-        }
-      `}</style>
         </section>
     );
 };

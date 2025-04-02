@@ -29,7 +29,6 @@ const Contact = ({ isLightMode }) => {
                         }`}
                 >
                     <p className="font-mono text-xs mb-4">
-                        // Contact Form
                     </p>
                     <div className="form-group flex flex-col mb-5">
                         <label htmlFor="name" className="sr-only">

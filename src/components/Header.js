@@ -8,7 +8,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     const headerRef = useRef(null);
     // Use a ref to track the current (smoothed) letter count
     const currentLetterCount = useRef(0);
-    // Keep a ref for the current animation frame ID (to cancel if needed)
     const scrollRequestId = useRef(null);
 
     const updateText = () => {
@@ -18,21 +17,18 @@ const Header = ({ isLightMode, toggleLightMode }) => {
         const start = headerRef.current.offsetTop;
         const height = headerRef.current.offsetHeight;
 
-        // If above header, show nothing
         if (scrollY <= start) {
             currentLetterCount.current = 0;
             setDisplayText('');
             return;
         }
 
-        // If past header, show the full word immediately
         if (scrollY >= start + height) {
             currentLetterCount.current = targetWord.length;
             setDisplayText(targetWord);
             return;
         }
 
-        // Otherwise, smoothly interpolate the letter count.
         let progress = (scrollY - start) / height;
         progress = Math.min(Math.max(progress, 0), 1);
         // Cubic ease-out for smoother transition.
@@ -49,7 +45,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
         scrollRequestId.current = requestAnimationFrame(updateText);
     };
 
-    // Use an Intersection Observer to attach/detach the scroll event listener
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -65,7 +60,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                     }
                 });
             },
-            { threshold: 0.1 } // Adjust as needed.
+            { threshold: 0.1 } 
         );
 
         if (headerRef.current) {
@@ -82,7 +77,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
         };
     }, []);
 
-    // Navigation toggles (rest of your component remains the same)
     const [isHamburgerActive, setIsHamburgerActive] = useState(false);
     const toggleHamburger = () => setIsHamburgerActive((prev) => !prev);
 

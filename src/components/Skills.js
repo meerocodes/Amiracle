@@ -48,7 +48,6 @@ const Skills = ({ isLightMode }) => {
         { icon: 'fa-solid fa-chart-simple', label: 'SOCIAL MEDIA ANALYTICS', description: 'Data-driven social media strategy.' },
     ];
 
-    // Array of unlocked skills: { index, position }
     const [unlockedSkills, setUnlockedSkills] = useState([]);
     // Track dragging info
     const [draggingSkill, setDraggingSkill] = useState(null);
@@ -139,8 +138,7 @@ const Skills = ({ isLightMode }) => {
         }
     }, [draggingSkill, handleMouseMove, handleMouseUp]);
 
-    // ---- Dynamic Text Effect (Smooth Scroll) ----
-    // Target word for dynamic text
+  
     const dynamicTarget = "STORYTELLING";
     const [bgText, setBgText] = useState("");
     // Speed factor > 1 will make typing and erasing faster

@@ -42,7 +42,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
 
     useEffect(() => {
-        const headerElement = headerRef.current; // capture ref value
+        const headerElement = headerRef.current; 
 
         const scrollHandler = () => {
             scrollRequestId.current = requestAnimationFrame(updateText);
@@ -94,7 +94,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                     : 'bg-[url(/assets/mainHeader.png)]'
                 } overflow-x-hidden`}
         >
-            {/* Navigation */}
             <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 bg-black/30 backdrop-blur-sm transition-all duration-300 hover:bg-black/20 hover:shadow-lg">
                 <a href="#header" className="logoLink">
                     <img
@@ -181,7 +180,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </ul>
             )}
 
-            {/* Background Text with Smooth Transition */}
             <div className="background-text absolute bottom-0 left-0 p-0 sm:p-4 pointer-events-none select-none">
                 <h1 className="text-white opacity-20 font-bold transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[13rem]">
                     {displayText}

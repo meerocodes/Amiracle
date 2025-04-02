@@ -19,7 +19,7 @@ const projectsData = [
         tech: 'SHOPIFY | CUSTOM SNIPPETS | DIGITAL TRANSFORMATION',
         description:
             "Co-Chief Executive Officer role where I established the Oudie brand from inception by designing a custom Shopify website, developing tailored digital solutions, and driving a significant boost in digital engagement.",
-        repo: 'https://github.com/meerocodes/prayerTimeApp',
+        repo: '',
         live: 'https://oudie.ca',
         align: 'right',
     },
@@ -65,7 +65,6 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
             observer.observe(cardRef.current);
         }
         return () => {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
             if (cardRef.current) observer.unobserve(cardRef.current);
         };
     }, []);
@@ -76,8 +75,7 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
     return (
         <div
             ref={cardRef}
-            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                } mb-16`}
+            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} mb-16`}
             style={{ transitionDelay: `${index * 100}ms` }}
         >
             <div className="group w-full h-96 md:h-80" style={{ perspective: '1000px' }}>
@@ -143,22 +141,47 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
                         </div>
                     </div>
                 </div>
-                {/* Hover Trigger for Flip */}
                 <style jsx>{`
-          .group:hover > div {
-            transform: rotateY(180deg);
-          }
-        `}</style>
+                    .group:hover > div {
+                        transform: rotateY(180deg);
+                    }
+                `}</style>
             </div>
         </div>
     );
 };
 
 const Projects = ({ isLightMode }) => {
+    // Dynamic typing effect for "Jack of all Trades"
+    const sectionRef = useRef(null);
+    const dynamicTarget = "Jack of all Trades";
+    const [displayText, setDisplayText] = useState("");
+
+    useEffect(() => {
+        let animationFrameId;
+        const updateText = () => {
+            if (sectionRef.current) {
+                const sectionTop = sectionRef.current.offsetTop;
+                const sectionHeight = sectionRef.current.offsetHeight;
+                const scrollY = window.scrollY;
+                // Use a lower factor on mobile to slow the typing effect
+                const factor = window.innerWidth < 768 ? 1.3 : 2;
+                let progress = (scrollY - sectionTop) / sectionHeight;
+                progress = Math.min(Math.max(progress * factor, 0), 1);
+                const charCount = Math.round(progress * dynamicTarget.length);
+                setDisplayText(dynamicTarget.substring(0, charCount));
+            }
+            animationFrameId = requestAnimationFrame(updateText);
+        };
+        animationFrameId = requestAnimationFrame(updateText);
+        return () => cancelAnimationFrame(animationFrameId);
+    }, [dynamicTarget]);
+
     return (
         <section
             id="projects"
-            className={`border-t-8 transition-all duration-500 bg-cover min-h-screen pb-20 ${isLightMode
+            ref={sectionRef}
+            className={`relative border-t-8 transition-all duration-500 bg-cover min-h-screen pb-4 ${isLightMode
                     ? 'bg-[url(/assets/lightMode/lightSectionImage.png)]'
                     : 'bg-[url(/assets/sectionImage.png)]'
                 }`}
@@ -186,6 +209,17 @@ const Projects = ({ isLightMode }) => {
                         />
                     ))}
                 </div>
+            </div>
+
+            <div className="w-full text-left mt-12">
+                <h1
+                    className="text-white opacity-20 font-bold leading-none overflow-hidden transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[8rem] xl:text-[10rem]"
+                    style={{
+                        textShadow: isLightMode ? '1px 1px 2px rgba(0,0,0,0.5)' : 'none'
+                    }}
+                >
+                    {displayText}
+                </h1>
             </div>
         </section>
     );

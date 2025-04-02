@@ -6,76 +6,25 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     const targetWord = 'BRANDING';
     const [displayText, setDisplayText] = useState('');
     const headerRef = useRef(null);
-    const currentLetterCount = useRef(0);
-    const scrollRequestId = useRef(null);
-
-    const updateText = () => {
-        if (!headerRef.current) return;
-
-        const scrollY = window.scrollY;
-        const start = headerRef.current.offsetTop;
-        const height = headerRef.current.offsetHeight;
-
-        if (scrollY <= start) {
-            currentLetterCount.current = 0;
-            setDisplayText('');
-            return;
-        }
-
-        if (scrollY >= start + height) {
-            currentLetterCount.current = targetWord.length;
-            setDisplayText(targetWord);
-            return;
-        }
-
-        let progress = (scrollY - start) / height;
-        progress = Math.min(Math.max(progress, 0), 1);
-        const easedProgress = 1 - Math.pow(1 - progress, 3);
-        const targetCount = easedProgress * targetWord.length;
-        const newCount =
-            currentLetterCount.current + (targetCount - currentLetterCount.current) * 0.2;
-        currentLetterCount.current = newCount;
-        const clampedLength = Math.min(Math.round(newCount), targetWord.length);
-        setDisplayText(targetWord.substring(0, clampedLength));
-    };
+    const speedFactor = 3;
 
     useEffect(() => {
-        const headerElement = headerRef.current;
-
-        const scrollHandler = () => {
-            scrollRequestId.current = requestAnimationFrame(updateText);
-        };
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        window.addEventListener('scroll', scrollHandler, { passive: true });
-                        window.addEventListener('resize', scrollHandler);
-                    } else {
-                        window.removeEventListener('scroll', scrollHandler);
-                        window.removeEventListener('resize', scrollHandler);
-                    }
-                });
-            },
-            { threshold: 0.1 }
-        );
-
-        if (headerElement) {
-            observer.observe(headerElement);
-        }
-
-        return () => {
-            if (headerElement) {
-                observer.unobserve(headerElement);
+        let animationFrameId;
+        const updateText = () => {
+            if (headerRef.current) {
+                const sectionTop = headerRef.current.offsetTop;
+                const sectionHeight = headerRef.current.offsetHeight;
+                const scrollY = window.scrollY;
+                let progress = (scrollY - sectionTop) / sectionHeight;
+                progress = Math.min(Math.max(progress * speedFactor, 0), 1);
+                const charCount = Math.round(progress * targetWord.length);
+                setDisplayText(targetWord.substring(0, charCount));
             }
-            window.removeEventListener('scroll', scrollHandler);
-            window.removeEventListener('resize', scrollHandler);
-            if (scrollRequestId.current) {
-                cancelAnimationFrame(scrollRequestId.current);
-            }
+            animationFrameId = requestAnimationFrame(updateText);
         };
-    }, []);
+        animationFrameId = requestAnimationFrame(updateText);
+        return () => cancelAnimationFrame(animationFrameId);
+    }, [targetWord, speedFactor]);
 
     const [isHamburgerActive, setIsHamburgerActive] = useState(false);
     const toggleHamburger = () => setIsHamburgerActive((prev) => !prev);
@@ -91,9 +40,9 @@ const Header = ({ isLightMode, toggleLightMode }) => {
         <header
             ref={headerRef}
             id="header"
-            className={`relative bg-cover h-screen min-h-[860px] transition-all duration-500 ${isLightMode
-                ? 'bg-[url(/assets/lightMode/lightMainHeader.png)]'
-                : 'bg-[url(/assets/mainHeader.png)]'
+            className={`relative bg-cover h-[100dvh] transition-all duration-500 ${isLightMode
+                    ? 'bg-[url(/assets/lightMode/lightMainHeader.png)]'
+                    : 'bg-[url(/assets/mainHeader.png)]'
                 } overflow-x-hidden`}
         >
             <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 bg-black/30 backdrop-blur-sm transition-all duration-300 hover:bg-black/20 hover:shadow-lg">
@@ -192,8 +141,14 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </div>
             )}
 
-            <div className="background-text absolute bottom-0 left-0 p-0 sm:p-4 pointer-events-none select-none">
-                <h1 className="text-white opacity-20 font-bold transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[13rem]">
+            <div className="absolute bottom-0 left-0 p-4">
+                <h1
+                    className="opacity-20 font-bold leading-none overflow-hidden transition-all duration-300 ease-out text-[3rem] sm:text-6xl md:text-8xl lg:text-[8rem] xl:text-[10rem] text-left"
+                    style={{
+                        color: 'white',
+                        textShadow: isLightMode ? '1px 5px 2px rgba(0, 0, 0, 0.9)' : 'none'
+                    }}
+                >
                     {displayText}
                 </h1>
             </div>
@@ -202,18 +157,18 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 className="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 px-4"
                 style={{ perspective: '1000px' }}
             >
-                <div className="sliding-text-block four-words">
+                <div className="sliding-text-block four-words mr-6">
                     <ul className="Words">
                         <li className="Words-line">
                             <p className="dev-3d">&nbsp;</p>
-                            <p>Web Developer</p>
-                        </li>
-                        <li className="Words-line">
-                            <p>Web Developer</p>
                             <p>CEO</p>
                         </li>
                         <li className="Words-line">
                             <p>CEO</p>
+                            <p>Web Developer</p>
+                        </li>
+                        <li className="Words-line">
+                            <p>Web Developer</p>
                             <p>CREATOR</p>
                         </li>
                         <li className="Words-line">
@@ -290,20 +245,20 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             </div>
 
             <style jsx>{`
-                .animate-slide-in {
-                    animation: slideIn 0.3s ease-out forwards;
-                }
-                @keyframes slideIn {
-                    from {
-                        transform: translateY(-20px);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
-                }
-            `}</style>
+        .animate-slide-in {
+          animation: slideIn 0.3s ease-out forwards;
+        }
+        @keyframes slideIn {
+          from {
+            transform: translateY(-20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      `}</style>
         </header>
     );
 };

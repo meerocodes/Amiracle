@@ -39,10 +39,8 @@ const Header = ({ isLightMode, toggleLightMode }) => {
         setDisplayText(targetWord.substring(0, clampedLength));
     };
 
-
-
     useEffect(() => {
-        const headerElement = headerRef.current; 
+        const headerElement = headerRef.current;
 
         const scrollHandler = () => {
             scrollRequestId.current = requestAnimationFrame(updateText);
@@ -104,13 +102,13 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </a>
                 <ul className="hidden md:flex gap-5 items-center">
                     <li className="navItem">
-                        <a href="#skills">// skills</a>
+                        <a href="#skills">{"// skills"}</a>
                     </li>
                     <li className="navItem">
-                        <a href="#projects">// projects</a>
+                        <a href="#projects">{"// projects"}</a>
                     </li>
                     <li className="navItem">
-                        <a href="#contact">// get in touch</a>
+                        <a href="#contact">{"// get in touch"}</a>
                     </li>
                     <li className="navItem">
                         <div className="flex items-center">
@@ -143,17 +141,17 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 <ul className="md:hidden fixed top-16 left-0 right-0 bg-gray-800 text-white flex flex-col items-center gap-4 p-4 z-50">
                     <li className="navItem">
                         <a href="#skills" onClick={toggleHamburger}>
-              // skills
+                            {"// skills"}
                         </a>
                     </li>
                     <li className="navItem">
                         <a href="#projects" onClick={toggleHamburger}>
-              // projects
+                            {"// projects"}
                         </a>
                     </li>
                     <li className="navItem">
                         <a href="#contact" onClick={toggleHamburger}>
-              // get in touch
+                            {"// get in touch"}
                         </a>
                     </li>
                     <li className="navItem">
@@ -185,7 +183,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                     {displayText}
                 </h1>
             </div>
-
 
             <div
                 className="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 px-4"

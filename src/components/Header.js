@@ -42,14 +42,16 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
 
     useEffect(() => {
+        const headerElement = headerRef.current; // capture ref value
+
         const scrollHandler = () => {
             scrollRequestId.current = requestAnimationFrame(updateText);
         };
+
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
-
                         window.addEventListener('scroll', scrollHandler, { passive: true });
                         window.addEventListener('resize', scrollHandler);
                     } else {
@@ -58,15 +60,17 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                     }
                 });
             },
-            { threshold: 0.1 } 
+            { threshold: 0.1 }
         );
 
-        if (headerRef.current) {
-            observer.observe(headerRef.current);
+        if (headerElement) {
+            observer.observe(headerElement);
         }
 
         return () => {
-            if (headerRef.current) observer.unobserve(headerRef.current);
+            if (headerElement) {
+                observer.unobserve(headerElement);
+            }
             window.removeEventListener('scroll', scrollHandler);
             window.removeEventListener('resize', scrollHandler);
             if (scrollRequestId.current) {

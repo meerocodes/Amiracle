@@ -1,4 +1,7 @@
 import React, { useRef } from 'react';
+// Import the new background images
+import LightProjectBg from '../assets/lightMode/lightSectionImage.webp';
+import DarkProjectBg from '../assets/darkmode/sectionImage.webp';
 
 const projectsData = [
     {
@@ -78,8 +81,7 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
     return (
         <div
             ref={cardRef}
-            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                } mb-16`}
+            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} mb-16`}
             style={{ transitionDelay: `${index * 100}ms` }}
         >
             <div className="group w-full h-96 md:h-80" style={{ perspective: '1000px' }}>
@@ -161,22 +163,20 @@ const Projects = ({ isLightMode }) => {
         <section
             id="projects"
             ref={sectionRef}
-            className={`relative border-t-8 transition-all duration-500 bg-cover min-h-screen pb-4 ${isLightMode
-                    ? 'bg-[url(/assets/lightMode/lightSectionImage.png)]'
-                    : 'bg-[url(/assets/sectionImage.png)]'
-                }`}
+            style={{
+                backgroundImage: `url(${isLightMode ? LightProjectBg : DarkProjectBg})`
+            }}
+            className="relative border-t-8 transition-all duration-500 bg-cover min-h-screen pb-4"
         >
             <div className="w-11/12 sm:w-4/5 mx-auto flex flex-col items-center">
                 <h2
-                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'
-                        }`}
+                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'}`}
                 >
                     {'<PROJECTS />'}
                 </h2>
                 <p className="mt-4 text-sm font-mono text-gray-300">hover to view details</p>
                 <i
-                    className={`fa-solid fa-angle-down mt-4 text-2xl ${isLightMode ? 'text-gray-900' : 'text-white'
-                        }`}
+                    className={`fa-solid fa-angle-down mt-4 text-2xl ${isLightMode ? 'text-gray-900' : 'text-white'}`}
                 ></i>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16 w-full">
                     {projectsData.map((project, index) => (

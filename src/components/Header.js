@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import LightModeLogo from '../../src/finalLogoLightMode.svg';
 import DarkModeLogo from '../../src/finalLogoDarkMode.svg';
+// Import your new background images
+import LightModeHeaderBg from '../assets/lightMode/lightMainHeader.webp';
+import DarkModeHeaderBg from '../assets/darkmode/mainHeader.webp';
 
-// Move the words array outside the component for stability.
 const words = ['BRANDING', 'STORYTELLING', 'GRAPHICS', 'E-COMMERCE'];
 
 const Header = ({ isLightMode, toggleLightMode }) => {
@@ -12,12 +14,10 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     const [showTooltip, setShowTooltip] = useState(false);
     const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-
     useEffect(() => {
         const currentWord = words[currentWordIndex];
         const typingSpeed = isDeleting ? 100 : 200;
         setIsTouchDevice(('ontouchstart' in window || navigator.maxTouchPoints > 0));
-
 
         const handleTyping = () => {
             if (!isDeleting) {
@@ -55,12 +55,11 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     return (
         <header
             id="header"
-            className={`relative bg-cover  h-[100dvh] transition-all duration-500 ${isLightMode
-                    ? 'bg-[url(/assets/lightMode/lightMainHeader.png)]'
-                    : 'bg-[url(/assets/mainHeader.png)]'
-                } overflow-x-hidden`}
+            style={{
+                backgroundImage: `url(${isLightMode ? LightModeHeaderBg : DarkModeHeaderBg})`
+            }}
+            className="relative bg-cover h-[100dvh] transition-all duration-500 overflow-x-hidden"
         >
-
             <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 bg-black/30 backdrop-blur-sm transition-all duration-300 hover:bg-black/20 hover:shadow-lg">
                 <a href="#header" className="logoLink">
                     <img
@@ -86,8 +85,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 className="w-12 h-6 bg-gray-600 rounded-full cursor-pointer relative transition-colors duration-300"
                             >
                                 <div
-                                    className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'
-                                        }`}
+                                    className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'}`}
                                 ></div>
                             </div>
                             <span className="ml-2 text-white text-sm">
@@ -143,8 +141,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 >
                                     <div className="w-12 h-6 bg-gray-600 rounded-full relative transition-colors duration-300">
                                         <div
-                                            className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'
-                                                }`}
+                                            className={`w-6 h-6 ${isLightMode ? 'bg-black' : 'bg-white'} rounded-full absolute top-0 left-0 transition-transform duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'}`}
                                         ></div>
                                     </div>
                                     <span className="text-xl">
@@ -157,7 +154,6 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </div>
             )}
 
-            {/* New typewriter text on bottom left with fixed min-width */}
             <div className="absolute bottom-0 left-0 p-4">
                 <span
                     className="text-white text-sm font-mono inline-block"
@@ -193,7 +189,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         </span>
                         {showTooltip && (
                             <div className="absolute -top-10 right-0 w-48 p-2 text-xs text-white bg-gray-900 rounded shadow-lg">
-                                The order has no significance, just thought it looked cooler! 
+                                The order has no significance, just thought it looked cooler!
                             </div>
                         )}
                     </div>

@@ -1,9 +1,11 @@
 import React, { useState, useRef } from 'react';
+// Import the new background images
+import LightSectionBg from '../assets/lightMode/lightSectionImage2.webp';
+import DarkSectionBg from '../assets/darkmode/sectionImage2.webp';
 
 const Skills = ({ isLightMode }) => {
     const sectionRef = useRef(null);
 
-    // Group skills into categories
     const groupedSkills = {
         "Tech": [
             { icon: 'fa-brands fa-git-alt', label: 'GIT', description: 'Version control is my superpower.' },
@@ -44,22 +46,20 @@ const Skills = ({ isLightMode }) => {
         }
     };
 
-    // Reverse the order so the new unlocked category appears at the top.
     const unlockedCategories = categoryOrder.slice(0, unlockedCategoryCount).reverse();
 
     return (
         <section
             id="skills"
             ref={sectionRef}
-            className={`relative border-t-8 transition-all duration-500 bg-cover min-h-screen overflow-x-hidden ${isLightMode
-                    ? 'bg-[url(/assets/lightMode/lightSectionImage2.png)]'
-                    : 'bg-[url(/assets/sectionImage2.png)]'
-                }`}
+            style={{
+                backgroundImage: `url(${isLightMode ? LightSectionBg : DarkSectionBg})`
+            }}
+            className="relative border-t-8 transition-all duration-500 bg-cover min-h-screen overflow-x-hidden"
         >
             <div className="relative w-11/12 sm:w-4/5 mx-auto flex flex-col items-center py-12">
                 <h2
-                    className={`text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'
-                        }`}
+                    className={`text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'}`}
                 >
                     {'<SKILLS />'}
                 </h2>
@@ -82,8 +82,7 @@ const Skills = ({ isLightMode }) => {
                 {unlockedCategories.map((category) => (
                     <div
                         key={category}
-                        className={`p-4 border rounded-lg shadow-lg transition-all duration-300 ${isLightMode ? 'bg-white/80 border-gray-300' : 'bg-gray-800 border-gray-700'
-                            }`}
+                        className={`p-4 border rounded-lg shadow-lg transition-all duration-300 ${isLightMode ? 'bg-white/80 border-gray-300' : 'bg-gray-800 border-gray-700'}`}
                     >
                         <h3 className={`text-xl font-bold mb-4 font-mono ${isLightMode ? 'text-black' : 'text-white'}`}>
                             {category}
@@ -96,16 +95,11 @@ const Skills = ({ isLightMode }) => {
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >
                                     <i
-                                        className={`${skill.icon} text-4xl md:text-6xl transition-all ${i % 2 === 0 ? 'animate-flyInLeft' : 'animate-flyInRight'
-                                            } ${isLightMode
-                                                ? 'text-black shadow-[0_0_10px_rgba(0,0,0,0.3)]'
-                                                : 'text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]'
-                                            }`}
+                                        className={`${skill.icon} text-4xl md:text-6xl transition-all ${i % 2 === 0 ? 'animate-flyInLeft' : 'animate-flyInRight'} ${isLightMode ? 'text-black shadow-[0_0_10px_rgba(0,0,0,0.3)]' : 'text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]'}`}
                                     ></i>
                                     <span className="absolute bottom-[-2rem] left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs font-mono rounded opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none max-w-[150px] whitespace-normal z-50">
                                         {skill.description}
                                     </span>
-
                                     <h4 className={`mt-2 font-mono text-sm ${isLightMode ? 'text-black' : 'text-white'}`}>
                                         {skill.label}
                                     </h4>

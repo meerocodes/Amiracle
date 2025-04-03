@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
+// Import your new background images
+import LightContactBg from '../assets/lightMode/lightSectionImage3.webp';
+import DarkContactBg from '../assets/darkmode/sectionImage3.webp';
 
 const Contact = ({ isLightMode }) => {
     const titleRef = useRef(null);
@@ -36,10 +39,10 @@ const Contact = ({ isLightMode }) => {
     return (
         <section
             id="contact"
-            className={`relative overflow-x-hidden border-t-8 transition-all duration-500 bg-cover min-h-screen ${isLightMode
-                ? 'bg-[url(/assets/lightMode/lightSectionImage3.png)]'
-                : 'bg-[url(/assets/sectionImage3.png)]'
-                }`}
+            style={{
+                backgroundImage: `url(${isLightMode ? LightContactBg : DarkContactBg})`
+            }}
+            className="relative overflow-x-hidden border-t-8 transition-all duration-500 bg-cover min-h-screen"
         >
             <div className="absolute inset-0"></div>
             <div className="relative w-4/5 mx-auto flex flex-col items-center">

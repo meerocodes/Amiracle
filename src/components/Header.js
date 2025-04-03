@@ -55,7 +55,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     return (
         <header
             id="header"
-            className={`relative bg-cover bg-fixed h-[100dvh] transition-all duration-500 ${isLightMode
+            className={`relative bg-cover  h-[100dvh] transition-all duration-500 ${isLightMode
                     ? 'bg-[url(/assets/lightMode/lightMainHeader.png)]'
                     : 'bg-[url(/assets/mainHeader.png)]'
                 } overflow-x-hidden`}

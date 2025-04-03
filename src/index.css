@@ -15,6 +15,7 @@ body {
 
 /* Parent element for the sliding words */
 .Words {
+    
     text-align: left;
     margin: 0 auto;
     padding: 80px 0;
@@ -32,11 +33,14 @@ body {
 
 /* Paragraph styles */
 .Words p {
-border-left: 3px solid #363535;
-    box-shadow: 0 .5px 15px darkgrey;
+    border-left: 8px solid rgba(54, 54, 54, 0.9);
+    /* background: rgba(50, 145, 52, 0.5); */
+    /* Use the narrow border from the reference */
+    box-shadow: 0 0.5px 15px darkgrey;
     text-align: start;
     height: 50px;
-    line-height: 50px;
+    line-height: 45px;
+    /* 50px (clip height) minus 5px */
     text-shadow: 0 2px 20px rgb(107, 107, 107);
     padding: 0 10px;
     transition: all 0.4s ease-in-out;

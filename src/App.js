@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Skills from './components/Skills';
 import Projects from './components/Projects';
@@ -6,7 +6,16 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 
 function App() {
-  const [isLightMode, setIsLightMode] = useState(false);
+  // Initialize the theme based on localStorage or default to dark mode (false)
+  const [isLightMode, setIsLightMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme');
+    return savedTheme ? savedTheme === 'light' : false;
+  });
+
+  // Update localStorage whenever the theme changes
+  useEffect(() => {
+    localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+  }, [isLightMode]);
 
   const toggleLightMode = () => {
     setIsLightMode((prev) => !prev);

@@ -183,7 +183,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         onClick={() => setShowTooltip((prev) => !prev)}
                     >
                         <span
-                            className="text-white text-lg font-bold"
+                            className="text-white text-lg font-bold mr-4"
                             style={{
                                 minWidth: '12ch',
                                 color: isLightMode ? 'black' : 'white'

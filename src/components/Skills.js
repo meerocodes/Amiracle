@@ -102,9 +102,10 @@ const Skills = ({ isLightMode }) => {
                                                 : 'text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]'
                                             }`}
                                     ></i>
-                                    <span className="absolute bottom-[-2rem] left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs font-mono rounded opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none whitespace-nowrap">
+                                    <span className="absolute bottom-[-2rem] left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs font-mono rounded opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none max-w-[150px] whitespace-normal z-50">
                                         {skill.description}
                                     </span>
+
                                     <h4 className={`mt-2 font-mono text-sm ${isLightMode ? 'text-black' : 'text-white'}`}>
                                         {skill.label}
                                     </h4>

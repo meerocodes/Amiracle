@@ -3,17 +3,21 @@ import LightModeLogo from '../../src/finalLogoLightMode.svg';
 import DarkModeLogo from '../../src/finalLogoDarkMode.svg';
 
 // Move the words array outside the component for stability.
-const words = ['BRANDING', 'STORYTELLING', 'INNOVATION', 'CREATIVITY'];
+const words = ['BRANDING', 'STORYTELLING', 'GRAPHICS', 'E-COMMERCE'];
 
 const Header = ({ isLightMode, toggleLightMode }) => {
     const [displayText, setDisplayText] = useState('');
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
     const [isDeleting, setIsDeleting] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+
 
     useEffect(() => {
         const currentWord = words[currentWordIndex];
         const typingSpeed = isDeleting ? 100 : 200;
+        setIsTouchDevice(('ontouchstart' in window || navigator.maxTouchPoints > 0));
+
 
         const handleTyping = () => {
             if (!isDeleting) {
@@ -51,11 +55,12 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     return (
         <header
             id="header"
-            className={`relative bg-cover h-[100dvh] transition-all duration-500 ${isLightMode
+            className={`relative bg-cover bg-fixed h-[100dvh] transition-all duration-500 ${isLightMode
                     ? 'bg-[url(/assets/lightMode/lightMainHeader.png)]'
                     : 'bg-[url(/assets/mainHeader.png)]'
                 } overflow-x-hidden`}
         >
+
             <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 bg-black/30 backdrop-blur-sm transition-all duration-300 hover:bg-black/20 hover:shadow-lg">
                 <a href="#header" className="logoLink">
                     <img
@@ -173,8 +178,8 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                     {/* Tooltip Icon */}
                     <div
                         className="absolute -top-6 -right-8 cursor-pointer"
-                        onMouseEnter={() => setShowTooltip(true)}
-                        onMouseLeave={() => setShowTooltip(false)}
+                        onMouseEnter={!isTouchDevice ? () => setShowTooltip(true) : undefined}
+                        onMouseLeave={!isTouchDevice ? () => setShowTooltip(false) : undefined}
                         onClick={() => setShowTooltip((prev) => !prev)}
                     >
                         <span
@@ -188,7 +193,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         </span>
                         {showTooltip && (
                             <div className="absolute -top-10 right-0 w-48 p-2 text-xs text-white bg-gray-900 rounded shadow-lg">
-                                The order has no significance, just thought it looks cooler that way!
+                                The order has no significance, just thought it looked cooler! 
                             </div>
                         )}
                     </div>

@@ -49,7 +49,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     const toggleSocialArrow = () => setIsSocialArrowActive((prev) => !prev);
 
     const mobileMenuClasses = isLightMode
-        ? 'bg-gradient-to-br from-blue-100 to-blue-300'
+        ? 'bg-gradient-to-br from-green-100/30 to-green-300/60 text-shadow-white'
         : 'bg-gradient-to-br from-gray-700 to-gray-900';
 
     return (
@@ -60,7 +60,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             }}
             className="relative bg-cover h-[100dvh] transition-all duration-500 overflow-x-hidden"
         >
-            <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 bg-black/30 backdrop-blur-sm transition-all duration-300 hover:bg-black/20 hover:shadow-lg">
+            <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 bg-black/10 backdrop-blur-sm transition-all duration-300 hover:bg-black/20 hover:shadow-lg">
                 <a href="#header" className="logoLink">
                     <img
                         src={isLightMode ? LightModeLogo : DarkModeLogo}
@@ -116,17 +116,17 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                             &times;
                         </button>
                         <ul className="flex flex-col gap-6 text-center mt-6">
-                            <li className="text-xl hover:text-blue-400 transition-colors hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
+                            <li className="text-xl hover:text-white transition-colors hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
                                 <a href="#skills" onClick={toggleHamburger}>
                                     {"// skills"}
                                 </a>
                             </li>
-                            <li className="text-xl hover:text-blue-400 transition-colors hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
+                            <li className="text-xl hover:text-white transition-colors hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
                                 <a href="#projects" onClick={toggleHamburger}>
                                     {"// projects"}
                                 </a>
                             </li>
-                            <li className="text-xl hover:text-blue-400 transition-colors hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
+                            <li className="text-xl hover:text-white transition-colors hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
                                 <a href="#contact" onClick={toggleHamburger}>
                                     {"// get in touch"}
                                 </a>
@@ -188,10 +188,17 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                             ?
                         </span>
                         {showTooltip && (
-                            <div className="absolute -top-10 right-0 w-48 p-2 text-xs text-white bg-gray-900 rounded shadow-lg">
+                            <div
+                                className={`absolute -top-10 right-0 w-48 p-2 text-xs rounded shadow-lg transition-all duration-300 z-10
+            ${isLightMode
+                                        ? 'bg-white/80 border border-gray-300 text-black'
+                                    : 'bg-gradient-to-b from-yellow-200/80 to-yellow-400/80 border-4 border-double border-red-900 text-white'
+                                    }`}
+                            >
                                 The order has no significance, just thought it looked cooler!
                             </div>
                         )}
+
                     </div>
                     <div className="sliding-text-block four-words mr-20">
                         <ul className="Words">

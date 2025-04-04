@@ -82,9 +82,12 @@ const Skills = ({ isLightMode }) => {
                 {unlockedCategories.map((category) => (
                     <div
                         key={category}
-                        className={`p-4 border rounded-lg shadow-lg transition-all duration-300 ${isLightMode ? 'bg-white/80 border-gray-300' : 'bg-gray-800 border-gray-700'}`}
+                        className={`p-4 transition-all duration-300 rounded-lg ${isLightMode
+                                ? 'bg-white/80 border border-gray-300 shadow-lg'
+                                : 'bg-gradient-to-b from-yellow-200/30 to-yellow-400/40 border-4 border-double border-yellow-500 shadow-2xl'
+                            }`}
                     >
-                        <h3 className={`text-xl font-bold mb-4 font-mono ${isLightMode ? 'text-black' : 'text-white'}`}>
+                        <h3 className={`text-xl font-bold mb-4 font-mono ${isLightMode ? 'text-black' : 'text-gray-900'}`}>
                             {category}
                         </h3>
                         <div className="flex flex-wrap gap-4">
@@ -95,12 +98,12 @@ const Skills = ({ isLightMode }) => {
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >
                                     <i
-                                        className={`${skill.icon} text-4xl md:text-6xl transition-all ${i % 2 === 0 ? 'animate-flyInLeft' : 'animate-flyInRight'} ${isLightMode ? 'text-black shadow-[0_0_10px_rgba(0,0,0,0.3)]' : 'text-white shadow-[0_0_10px_rgba(255,255,255,0.3)]'}`}
+                                        className={`${skill.icon} text-4xl md:text-6xl transition-all ${i % 2 === 0 ? 'animate-flyInLeft' : 'animate-flyInRight'} ${isLightMode ? 'text-black text-shadow-green' : 'text-white text-shadow-white'}`}
                                     ></i>
                                     <span className="absolute bottom-[-2rem] left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs font-mono rounded opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none max-w-[150px] whitespace-normal z-50">
                                         {skill.description}
                                     </span>
-                                    <h4 className={`mt-2 font-mono text-sm ${isLightMode ? 'text-black' : 'text-white'}`}>
+                                    <h4 className={`mt-2 font-mono text-sm ${isLightMode ? 'text-black' : 'text-black'}`}>
                                         {skill.label}
                                     </h4>
                                 </div>

@@ -94,7 +94,10 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
                         />
                     </div>
                     <div
-                        className="absolute w-full h-full bg-gradient-to-b from-yellow-200 to-yellow-400 text-gray-900 flex flex-col justify-between p-4 rounded-lg border-4 border-yellow-500 shadow-lg overflow-auto"
+                        className={`absolute w-full h-full ${isLightMode
+                                ? 'bg-white/90 text-gray-900 flex flex-col justify-between p-4 rounded-lg border border-gray-300 shadow-lg overflow-auto'
+                                : 'bg-gradient-to-b from-yellow-200/80 to-yellow-400/70 text-gray-900 flex flex-col justify-between p-4 rounded-lg border-4 border-yellow-500 shadow-lg overflow-auto'
+                            }`}
                         style={{
                             backfaceVisibility: 'hidden',
                             transform: 'rotateY(180deg)',
@@ -145,6 +148,7 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
                             </a>
                         </div>
                     </div>
+
                 </div>
                 <style jsx>{`
                     .group:hover > div {
@@ -174,7 +178,7 @@ const Projects = ({ isLightMode }) => {
                 >
                     {'<PROJECTS />'}
                 </h2>
-                <p className="mt-4 text-sm font-mono text-gray-300">hover to view details</p>
+                <p className="mt-4 text-sm font-mono text-green-700/70">hover to view details</p>
                 <i
                     className={`fa-solid fa-angle-down mt-4 text-2xl ${isLightMode ? 'text-gray-900' : 'text-white'}`}
                 ></i>

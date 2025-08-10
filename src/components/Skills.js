@@ -37,6 +37,24 @@ const Skills = ({ isLightMode }) => {
 
     const categoryOrder = ["Tech", "UX/UI", "Tools", "Soft Skills"];
     const [unlockedCategoryCount, setUnlockedCategoryCount] = useState(0);
+    const [isVisible, setIsVisible] = useState(false);
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            { threshold: 0.2 }
+        );
+        
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+        
+        return () => observer.disconnect();
+    }, []);
 
     const handleUnlock = () => {
         if (unlockedCategoryCount < categoryOrder.length) {
@@ -55,21 +73,24 @@ const Skills = ({ isLightMode }) => {
             style={{
                 backgroundImage: `url(${isLightMode ? LightSectionBg : DarkSectionBg})`
             }}
-            className="relative border-t-8 transition-all duration-500 bg-cover min-h-screen overflow-x-hidden"
+            className="relative border-t-8 section-transition bg-cover min-h-screen overflow-x-hidden"
         >
-            <div className="relative w-11/12 sm:w-4/5 mx-auto flex flex-col items-center py-12">
+            <div className={`relative w-11/12 sm:w-4/5 mx-auto flex flex-col items-center py-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                 <h2
-                    className={`text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'}`}
+                    className={`text-4xl font-mono font-bold drop-shadow-lg mb-4 ${isLightMode ? 'text-gray-900' : 'gradient-text'}`}
                 >
                     {'<SKILLS />'}
                 </h2>
+                <div className={`w-24 h-1 rounded-full mb-8 ${isLightMode ? 'bg-gradient-to-r from-gray-400 to-gray-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}></div>
                 <button
                     onClick={handleUnlock}
-                    className="mt-6 px-6 py-3 rounded-lg transition-all duration-300 font-bold font-mono shadow-2xl transform hover:scale-110"
+                    className="px-8 py-4 rounded-full btn-modern font-bold font-mono shadow-2xl transform hover:scale-110 pulse-glow"
                     style={{
-                        backgroundColor: isLightMode ? '#f3f4f6' : '#1f2937',
-                        border: isLightMode ? '1px solid #d1d5db' : '1px solid #374151',
-                        color: isLightMode ? '#16a34a' : '#4ade80'
+                        background: isLightMode 
+                            ? 'linear-gradient(135deg, #f3f4f6, #e5e7eb)' 
+                            : 'linear-gradient(135deg, #667eea, #764ba2)',
+                        border: isLightMode ? '2px solid #d1d5db' : '2px solid rgba(255,255,255,0.2)',
+                        color: isLightMode ? '#16a34a' : '#ffffff'
                     }}
                 >
                     {unlockedCategoryCount < categoryOrder.length
@@ -78,32 +99,33 @@ const Skills = ({ isLightMode }) => {
                 </button>
             </div>
 
-            <div className="relative z-10 w-full max-w-6xl mx-auto space-y-8 px-4 py-12">
+            <div className="relative z-10 w-full max-w-6xl mx-auto space-y-8 px-4 py-12 stagger-animation">
                 {unlockedCategories.map((category) => (
                     <div
                         key={category}
-                        className={`p-4 transition-all duration-300 rounded-lg ${isLightMode
-                                ? 'bg-white/80 border border-gray-300 shadow-lg'
-                                : 'bg-gradient-to-b from-yellow-200/30 to-yellow-400/40 border-4 border-double border-yellow-500 shadow-2xl'
-                            }`}
+                        className={`p-6 transition-all duration-500 rounded-xl card-hover ${isLightMode
+                                ? 'glass border-2 border-white/30 shadow-xl'
+                                : 'glass-dark border-2 border-white/20 shadow-2xl'
+                            } backdrop-blur-lg`}
                     >
-                        <h3 className={`text-xl font-bold mb-4 font-mono ${isLightMode ? 'text-black' : 'text-gray-900'}`}>
+                        <h3 className={`text-2xl font-bold mb-6 font-mono flex items-center gap-3 ${isLightMode ? 'text-black' : 'text-white'}`}>
+                            <div className={`w-3 h-3 rounded-full ${isLightMode ? 'bg-gradient-to-r from-green-400 to-blue-500' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}></div>
                             {category}
                         </h3>
-                        <div className="flex flex-wrap gap-4">
+                        <div className="flex flex-wrap gap-6">
                             {groupedSkills[category].map((skill, i) => (
                                 <div
                                     key={i}
-                                    className="relative group flex flex-col items-center cursor-pointer w-24 text-center"
+                                    className="relative group flex flex-col items-center cursor-pointer w-28 text-center interactive"
                                     style={{ animationDelay: `${i * 0.1}s` }}
                                 >
                                     <i
-                                        className={`${skill.icon} text-4xl md:text-6xl transition-all ${i % 2 === 0 ? 'animate-flyInLeft' : 'animate-flyInRight'} ${isLightMode ? 'text-black text-shadow-green' : 'text-white text-shadow-white'}`}
+                                        className={`${skill.icon} text-5xl md:text-6xl transition-all duration-500 ${i % 2 === 0 ? 'animate-flyInLeft' : 'animate-flyInRight'} ${isLightMode ? 'text-black hover:text-blue-600' : 'text-white hover:text-blue-400'} hover:scale-125 hover:rotate-12`}
                                     ></i>
-                                    <span className="absolute bottom-[-2rem] left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs font-mono rounded opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none max-w-[150px] whitespace-normal z-50">
+                                    <span className={`absolute bottom-[-3rem] left-1/2 transform -translate-x-1/2 px-3 py-2 text-white text-xs font-mono rounded-lg opacity-0 transition-all duration-300 group-hover:opacity-100 pointer-events-none max-w-[180px] whitespace-normal z-50 shadow-xl ${isLightMode ? 'glass-dark' : 'glass-dark border border-white/20'}`}>
                                         {skill.description}
                                     </span>
-                                    <h4 className={`mt-2 font-mono text-sm ${isLightMode ? 'text-black ' : 'text-black font-bold'}`}>
+                                    <h4 className={`mt-3 font-mono text-sm font-semibold ${isLightMode ? 'text-black' : 'text-white'} group-hover:text-blue-400 transition-colors duration-300`}>
                                         {skill.label}
                                     </h4>
                                 </div>
@@ -116,11 +138,11 @@ const Skills = ({ isLightMode }) => {
             <style jsx>{`
                 @keyframes flyInLeft {
                   0% {
-                    transform: translateX(-100vw) rotate(-30deg) scale(0.5);
+                    transform: translateX(-100vw) rotate(-360deg) scale(0.3);
                     opacity: 0;
                   }
                   50% {
-                    transform: translateX(10vw) rotate(10deg) scale(1.1);
+                    transform: translateX(10vw) rotate(-180deg) scale(1.2);
                     opacity: 0.8;
                   }
                   100% {
@@ -130,11 +152,11 @@ const Skills = ({ isLightMode }) => {
                 }
                 @keyframes flyInRight {
                   0% {
-                    transform: translateX(100vw) rotate(30deg) scale(0.5);
+                    transform: translateX(100vw) rotate(360deg) scale(0.3);
                     opacity: 0;
                   }
                   50% {
-                    transform: translateX(-10vw) rotate(-10deg) scale(1.1);
+                    transform: translateX(-10vw) rotate(180deg) scale(1.2);
                     opacity: 0.8;
                   }
                   100% {
@@ -143,10 +165,10 @@ const Skills = ({ isLightMode }) => {
                   }
                 }
                 .animate-flyInLeft {
-                  animation: flyInLeft 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+                  animation: flyInLeft 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
                 }
                 .animate-flyInRight {
-                  animation: flyInRight 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+                  animation: flyInRight 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
                 }
             `}</style>
         </section>

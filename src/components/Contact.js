@@ -8,6 +8,9 @@ const Contact = ({ isLightMode }) => {
     const cardRef = useRef(null);
     const [titleVisible, setTitleVisible] = useState(false);
     const [cardVisible, setCardVisible] = useState(false);
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState('');
 
     useEffect(() => {
         const titleElement = titleRef.current;
@@ -36,63 +39,95 @@ const Contact = ({ isLightMode }) => {
         };
     }, []);
 
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitStatus('');
+        
+        try {
+            const response = await fetch('https://formspree.io/f/xeqwljbo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            
+            if (response.ok) {
+                setSubmitStatus('success');
+                setFormData({ name: '', email: '', message: '' });
+            } else {
+                setSubmitStatus('error');
+            }
+        } catch (error) {
+            setSubmitStatus('error');
+        } finally {
+            setIsSubmitting(false);
+            setTimeout(() => setSubmitStatus(''), 3000);
+        }
+    };
     return (
         <section
             id="contact"
             style={{
                 backgroundImage: `url(${isLightMode ? LightContactBg : DarkContactBg})`
             }}
-            className="relative overflow-x-hidden border-t-8 transition-all duration-500 bg-cover min-h-screen"
+            className="relative overflow-x-hidden border-t-8 section-transition bg-cover min-h-screen"
         >
             <div className="absolute inset-0"></div>
             <div className="relative w-4/5 mx-auto flex flex-col items-center">
                 <h2
                     ref={titleRef}
-                    className={`p-10 text-4xl font-mono font-bold drop-shadow-lg transition-all duration-500 delay-100 ${titleVisible
-                            ? isLightMode
-                                ? 'opacity-100 translate-x-0 text-gray-900 underline decoration-gray-700'
-                                : 'opacity-100 translate-x-0 text-white'
+                    className={`p-10 text-4xl font-mono font-bold drop-shadow-lg transition-all duration-1000 delay-100 ${titleVisible
+                            ? 'opacity-100 translate-x-0'
                             : 'opacity-0 -translate-x-[100vw]'
-                        }`}
+                        } ${isLightMode ? 'text-gray-900' : 'gradient-text'}`}
                 >
                     {'<GET IN TOUCH />'}
                 </h2>
+                <div className={`w-24 h-1 rounded-full mb-8 transition-all duration-1000 delay-200 ${titleVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'} ${isLightMode ? 'bg-gradient-to-r from-gray-400 to-gray-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}></div>
                 <div
                     ref={cardRef}
-                    className={`pokemon-card relative rounded-xl p-4 mt-8 w-full max-w-lg shadow-2xl border-4 border-double transition-all duration-300 ${isLightMode
-                            ? 'bg-gradient-to-br from-gray-100/90 to-gray-100/70 border-gray-100'
-                            : 'bg-gradient-to-b from-yellow-200/80 to-yellow-400/30 border-yellow-500'
-                        }`}
+                    className={`pokemon-card relative rounded-2xl p-6 mt-8 w-full max-w-lg shadow-2xl transition-all duration-500 card-hover ${isLightMode
+                            ? 'glass border-2 border-white/30'
+                            : 'glass-dark border-2 border-white/20'
+                        } backdrop-blur-lg`}
                 >
-                    <div className="card-header flex justify-between items-center mb-4">
+                    <div className="card-header flex justify-between items-center mb-6">
                         <h2
-                            className={`font-bold font-mono text-2xl drop-shadow-lg transition-all duration-500 delay-200 ${cardVisible
+                            className={`font-bold font-mono text-2xl drop-shadow-lg transition-all duration-1000 delay-200 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 -translate-x-[100vw]'
-                                }`}
+                                } ${isLightMode ? 'text-black' : 'gradient-text'}`}
                         >
                             [Code Champion]
                         </h2>
                         <div
-                            className={`card-stats text-right transition-all duration-500 delay-300 ${cardVisible
+                            className={`card-stats text-right transition-all duration-1000 delay-300 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 translate-x-[100vw]'
                                 }`}
                         >
-                            <span className="block font-bold text-sm text-green-700">HP</span>
-                            <span className="block font-extrabold text-xl text-green-800">120</span>
+                            <span className={`block font-bold text-sm ${isLightMode ? 'text-green-700' : 'text-green-400'}`}>HP</span>
+                            <span className={`block font-extrabold text-xl ${isLightMode ? 'text-green-800' : 'text-green-300'}`}>120</span>
                         </div>
                     </div>
                     <form
-                        action="https://formspree.io/f/xeqwljbo"
-                        method="POST"
-                        className={`w-full rounded-lg p-6 backdrop-blur-sm shadow-inner transition-all duration-300 border ${isLightMode
-                                ? 'bg-white/90 text-black border-gray-300'
-                                : 'bg-gray-900/90 text-white border-gray-700'
-                            }`}
+                        onSubmit={handleSubmit}
+                        className={`w-full rounded-xl p-6 backdrop-blur-sm shadow-inner transition-all duration-300 border-2 ${isLightMode
+                                ? 'glass text-black border-white/30'
+                                : 'glass-dark text-white border-white/20'
+                            } space-y-4`}
                     >
                         <div
-                            className={`form-group flex flex-col mb-4 transition-all duration-500 delay-400 ${cardVisible
+                            className={`form-group flex flex-col transition-all duration-1000 delay-400 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 -translate-x-[100vw]'
                                 }`}
@@ -104,16 +139,18 @@ const Contact = ({ isLightMode }) => {
                                 type="text"
                                 id="name"
                                 name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
                                 placeholder="// Name"
                                 required
-                                className={`p-3 rounded-full border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isLightMode
-                                        ? 'bg-gray-100 border-gray-300 placeholder-gray-500 text-gray-800'
-                                        : 'bg-gray-800 border-gray-700 placeholder-gray-400 text-white'
-                                    }`}
+                                className={`p-4 rounded-full border-2 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105 focus:scale-105 ${isLightMode
+                                        ? 'glass border-white/30 placeholder-gray-500 text-gray-800'
+                                        : 'glass-dark border-white/20 placeholder-gray-400 text-white'
+                                    } backdrop-blur-sm`}
                             />
                         </div>
                         <div
-                            className={`form-group flex flex-col mb-4 transition-all duration-500 delay-500 ${cardVisible
+                            className={`form-group flex flex-col transition-all duration-1000 delay-500 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 translate-x-[100vw]'
                                 }`}
@@ -125,16 +162,18 @@ const Contact = ({ isLightMode }) => {
                                 type="email"
                                 id="email"
                                 name="email"
+                                value={formData.email}
+                                onChange={handleInputChange}
                                 placeholder="// Email"
                                 required
-                                className={`p-3 rounded-full border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 ${isLightMode
-                                        ? 'bg-gray-100 border-gray-300 placeholder-gray-500 text-gray-800'
-                                        : 'bg-gray-800 border-gray-700 placeholder-gray-400 text-white'
-                                    }`}
+                                className={`p-4 rounded-full border-2 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:scale-105 focus:scale-105 ${isLightMode
+                                        ? 'glass border-white/30 placeholder-gray-500 text-gray-800'
+                                        : 'glass-dark border-white/20 placeholder-gray-400 text-white'
+                                    } backdrop-blur-sm`}
                             />
                         </div>
                         <div
-                            className={`form-group flex flex-col mb-4 transition-all duration-500 delay-600 ${cardVisible
+                            className={`form-group flex flex-col transition-all duration-1000 delay-600 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 -translate-x-[100vw]'
                                 }`}
@@ -145,41 +184,74 @@ const Contact = ({ isLightMode }) => {
                             <textarea
                                 id="message"
                                 name="message"
+                                value={formData.message}
+                                onChange={handleInputChange}
                                 placeholder="// Message"
                                 required
-                                className={`p-3 rounded-lg border font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300 h-32 resize-none ${isLightMode
-                                        ? 'bg-gray-100 border-gray-300 placeholder-gray-500 text-gray-800'
-                                        : 'bg-gray-800 border-gray-700 placeholder-gray-400 text-white'
-                                    }`}
+                                className={`p-4 rounded-xl border-2 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 h-32 resize-none hover:scale-105 focus:scale-105 ${isLightMode
+                                        ? 'glass border-white/30 placeholder-gray-500 text-gray-800'
+                                        : 'glass-dark border-white/20 placeholder-gray-400 text-white'
+                                    } backdrop-blur-sm`}
                             ></textarea>
                         </div>
                         <button
                             type="submit"
-                            className={`w-full p-3 rounded-full font-mono font-semibold transition-transform duration-500 transform ${cardVisible
-                                    ? 'opacity-100 translate-x-0 hover:scale-105'
+                            disabled={isSubmitting}
+                            className={`w-full p-4 rounded-full font-mono font-semibold transition-all duration-500 transform btn-modern ${cardVisible
+                                    ? 'opacity-100 translate-x-0 hover:scale-105 pulse-glow'
                                     : 'opacity-0 translate-x-[100vw]'
-                                } ${isLightMode
-                                    ? 'bg-gradient-to-r from-gray-100 to-gray-200 text-black hover:from-gray-300 hover:to-gray-400'
-                                    : 'bg-gradient-to-r from-green-800 to-green-600 text-white hover:from-green-800/60 hover:to-green-400/20'
-                                }`}
+                                } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''} ${isLightMode
+                                    ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+                                    : 'bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600'
+                                } shadow-lg`}
                         >
-                            LAUNCH CODE BLAST
+                            {isSubmitting ? (
+                                <>
+                                    <i className="fa-solid fa-spinner fa-spin mr-2"></i>
+                                    LAUNCHING...
+                                </>
+                            ) : (
+                                <>
+                                    <i className="fa-solid fa-rocket mr-2"></i>
+                                    LAUNCH CODE BLAST
+                                </>
+                            )}
                         </button>
+                        
+                        {submitStatus && (
+                            <div className={`text-center p-3 rounded-lg transition-all duration-300 ${
+                                submitStatus === 'success' 
+                                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                            }`}>
+                                {submitStatus === 'success' ? (
+                                    <>
+                                        <i className="fa-solid fa-check-circle mr-2"></i>
+                                        Message sent successfully!
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fa-solid fa-exclamation-triangle mr-2"></i>
+                                        Failed to send message. Please try again.
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </form>
-                    <div className="card-footer mt-4 flex justify-between items-center text-xs italic">
+                    <div className="card-footer mt-6 flex justify-between items-center text-sm italic">
                         <span
-                            className={`transition-all duration-500 delay-800 ${cardVisible
+                            className={`transition-all duration-1000 delay-800 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 -translate-x-[100vw]'
-                                } ${isLightMode ? 'text-gray-700' : 'text-white-600 '}`}
+                                } ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}
                         >
                             Type: Debugger
                         </span>
                         <span
-                            className={`transition-all duration-500 delay-900 ${cardVisible
+                            className={`transition-all duration-1000 delay-900 ${cardVisible
                                     ? 'opacity-100 translate-x-0'
                                     : 'opacity-0 translate-x-[100vw]'
-                                } ${isLightMode ? 'text-gray-700' : 'text-white-600'}`}
+                                } ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}
                         >
                             Lvl 99
                         </span>

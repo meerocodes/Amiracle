@@ -315,7 +315,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 }`}
                             >
                                 The order has no significance, just thought it looked cooler! ✨
-                                <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
+                                <div className="absolute top-4 left-full w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-white/20"></div>
                             </div>
                         )}
                     </div>

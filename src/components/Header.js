@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import LightModeLogo from '../../src/finalLogoLightMode.svg';
 import DarkModeLogo from '../../src/finalLogoDarkMode.svg';
-// Import your new background images
 import LightModeHeaderBg from '../assets/lightMode/lightMainHeader.webp';
 import DarkModeHeaderBg from '../assets/darkmode/mainHeader.webp';
 
@@ -14,17 +13,28 @@ const Header = ({ isLightMode, toggleLightMode }) => {
     const [showTooltip, setShowTooltip] = useState(false);
     const [isTouchDevice, setIsTouchDevice] = useState(false);
     const [scrollY, setScrollY] = useState(0);
+    const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-    // Parallax scroll effect
+    // Enhanced parallax and mouse tracking
     useEffect(() => {
         const handleScroll = () => setScrollY(window.scrollY);
+        const handleMouseMove = (e) => {
+            setMousePosition({ x: e.clientX, y: e.clientY });
+        };
+        
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        window.addEventListener('mousemove', handleMouseMove);
+        
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
     }, []);
 
+    // Enhanced typewriter effect
     useEffect(() => {
         const currentWord = words[currentWordIndex];
-        const typingSpeed = isDeleting ? 100 : 200;
+        const typingSpeed = isDeleting ? 80 : 150;
         setIsTouchDevice(('ontouchstart' in window || navigator.maxTouchPoints > 0));
 
         const handleTyping = () => {
@@ -34,7 +44,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 if (nextText === currentWord) {
                     setTimeout(() => {
                         setIsDeleting(true);
-                    }, 1000);
+                    }, 2000);
                 }
             } else {
                 const nextText = currentWord.substring(0, displayText.length - 1);
@@ -65,78 +75,124 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             id="header"
             style={{
                 backgroundImage: `url(${isLightMode ? LightModeHeaderBg : DarkModeHeaderBg})`,
-                transform: `translateY(${scrollY * 0.5}px)`
+                transform: `translateY(${scrollY * 0.3}px)`,
+                backgroundPosition: `${mousePosition.x * 0.02}px ${mousePosition.y * 0.02}px`
             }}
-            className="relative bg-cover h-[100dvh] section-transition overflow-x-hidden"
+            className="relative bg-cover h-[100dvh] section-transition overflow-hidden"
         >
-            <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-4 z-50 glass-dark transition-all duration-300 hover:backdrop-blur-xl">
-                <a href="#header" className="logoLink">
+            {/* Animated particles */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                {[...Array(20)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="particle"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 10}s`,
+                            animationDuration: `${10 + Math.random() * 10}s`
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Enhanced Navigation */}
+            <nav className="fixed top-0 left-0 right-0 flex items-center justify-between p-6 z-50 glass-dark transition-all duration-500 hover:backdrop-blur-xl border-b border-white/10">
+                <a href="#header" className="logoLink group">
                     <img
                         src={isLightMode ? LightModeLogo : DarkModeLogo}
                         alt="amiracle logo"
-                        className="h-12 float interactive"
+                        className="h-14 float interactive transform-gpu group-hover:scale-110 transition-all duration-300"
                     />
                 </a>
-                <ul className="hidden md:flex gap-5 items-center stagger-animation">
+                
+                <ul className="hidden md:flex gap-8 items-center stagger-animation">
                     <li className="navItem">
-                        <a href="#skills" className="interactive hover:text-blue-400 transition-colors duration-300">{"// skills"}</a>
+                        <a 
+                            href="#skills" 
+                            className="interactive hover:text-blue-400 transition-all duration-300 text-lg font-mono relative group"
+                        >
+                            {"// skills"}
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
                     </li>
                     <li className="navItem">
-                        <a href="#projects" className="interactive hover:text-blue-400 transition-colors duration-300">{"// projects"}</a>
+                        <a 
+                            href="#projects" 
+                            className="interactive hover:text-blue-400 transition-all duration-300 text-lg font-mono relative group"
+                        >
+                            {"// projects"}
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
                     </li>
                     <li className="navItem">
-                        <a href="#contact" className="interactive hover:text-blue-400 transition-colors duration-300">{"// get in touch"}</a>
+                        <a 
+                            href="#contact" 
+                            className="interactive hover:text-blue-400 transition-all duration-300 text-lg font-mono relative group"
+                        >
+                            {"// get in touch"}
+                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
                     </li>
                     <li className="navItem">
-                        <div className="flex items-center">
+                        <div className="flex items-center gap-3">
                             <div
                                 onClick={toggleLightMode}
-                                className="w-12 h-6 bg-gray-600 rounded-full cursor-pointer relative transition-all duration-300 hover:scale-110 pulse-glow"
+                                className="w-16 h-8 bg-gray-700 rounded-full cursor-pointer relative transition-all duration-500 hover:scale-110 pulse-glow group"
                             >
                                 <div
-                                    className={`w-6 h-6 ${isLightMode ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'bg-gradient-to-r from-blue-400 to-purple-500'} rounded-full absolute top-0 left-0 transition-all duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'} shadow-lg`}
-                                ></div>
+                                    className={`w-8 h-8 ${isLightMode 
+                                        ? 'bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500' 
+                                        : 'bg-gradient-to-r from-blue-400 via-purple-500 to-indigo-600'
+                                    } rounded-full absolute top-0 left-0 transition-all duration-500 ${
+                                        isLightMode ? 'translate-x-8' : 'translate-x-0'
+                                    } shadow-lg group-hover:shadow-xl flex items-center justify-center`}
+                                >
+                                    <i className={`${isLightMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'} text-white text-sm`}></i>
+                                </div>
                             </div>
-                            <span className="ml-2 text-white text-sm font-mono">
+                            <span className="text-white text-sm font-mono gradient-text">
                                 {isLightMode ? 'go dark' : 'go light'}
                             </span>
                         </div>
                     </li>
                 </ul>
+
+                {/* Enhanced Hamburger Menu */}
                 <div
-                    className="block md:hidden hamburger cursor-pointer interactive"
+                    className="block md:hidden hamburger cursor-pointer interactive p-2"
                     onClick={toggleHamburger}
                 >
-                    <span className={`block w-6 h-0.5 my-1 bg-white transition-all duration-300 ${isHamburgerActive ? 'rotate-45 translate-y-2' : ''}`}></span>
-                    <span className={`block w-6 h-0.5 my-1 bg-white transition-all duration-300 ${isHamburgerActive ? 'opacity-0' : ''}`}></span>
-                    <span className={`block w-6 h-0.5 my-1 bg-white transition-all duration-300 ${isHamburgerActive ? '-rotate-45 -translate-y-2' : ''}`}></span>
+                    <span className={`block w-7 h-0.5 my-1.5 bg-white transition-all duration-500 ${isHamburgerActive ? 'rotate-45 translate-y-2.5' : ''}`}></span>
+                    <span className={`block w-7 h-0.5 my-1.5 bg-white transition-all duration-500 ${isHamburgerActive ? 'opacity-0' : ''}`}></span>
+                    <span className={`block w-7 h-0.5 my-1.5 bg-white transition-all duration-500 ${isHamburgerActive ? '-rotate-45 -translate-y-2.5' : ''}`}></span>
                 </div>
             </nav>
 
+            {/* Enhanced Mobile Menu */}
             {isHamburgerActive && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-lg transition-all duration-300 animate-fade-in">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-xl transition-all duration-500 animate-fade-in">
                     <div
-                        className={`relative ${mobileMenuClasses} rounded-[1.5rem] p-8 w-11/12 max-w-sm shadow-2xl transform transition-all duration-500 animate-slide-in ring-2 ring-blue-500/30`}
+                        className={`relative ${mobileMenuClasses} rounded-3xl p-10 w-11/12 max-w-md shadow-2xl transform transition-all duration-700 animate-slide-in ring-2 ring-blue-500/30`}
                     >
                         <button
                             onClick={toggleHamburger}
-                            className="absolute top-2 right-2 text-3xl text-white hover:text-blue-400 transition-all duration-300 transform hover:scale-110 hover:rotate-90 focus:outline-none"
+                            className="absolute top-4 right-4 text-4xl text-white hover:text-blue-400 transition-all duration-300 transform hover:scale-125 hover:rotate-90 focus:outline-none"
                         >
                             &times;
                         </button>
-                        <ul className="flex flex-col gap-6 text-center mt-6 stagger-animation">
-                            <li className="text-xl hover:text-white transition-all duration-300 hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
-                                <a href="#skills" onClick={toggleHamburger}>
+                        <ul className="flex flex-col gap-8 text-center mt-8 stagger-animation">
+                            <li className="text-2xl hover:text-white transition-all duration-300 hover:scale-110 transform drop-shadow-md hover:drop-shadow-[0_0_15px_rgba(0,191,255,0.8)]">
+                                <a href="#skills" onClick={toggleHamburger} className="font-mono">
                                     {"// skills"}
                                 </a>
                             </li>
-                            <li className="text-xl hover:text-white transition-all duration-300 hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
-                                <a href="#projects" onClick={toggleHamburger}>
+                            <li className="text-2xl hover:text-white transition-all duration-300 hover:scale-110 transform drop-shadow-md hover:drop-shadow-[0_0_15px_rgba(0,191,255,0.8)]">
+                                <a href="#projects" onClick={toggleHamburger} className="font-mono">
                                     {"// projects"}
                                 </a>
                             </li>
-                            <li className="text-xl hover:text-white transition-all duration-300 hover:scale-105 transform drop-shadow-md hover:drop-shadow-[0_0_10px_rgba(0,191,255,0.7)]">
-                                <a href="#contact" onClick={toggleHamburger}>
+                            <li className="text-2xl hover:text-white transition-all duration-300 hover:scale-110 transform drop-shadow-md hover:drop-shadow-[0_0_15px_rgba(0,191,255,0.8)]">
+                                <a href="#contact" onClick={toggleHamburger} className="font-mono">
                                     {"// get in touch"}
                                 </a>
                             </li>
@@ -146,14 +202,21 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                         toggleLightMode();
                                         toggleHamburger();
                                     }}
-                                    className="flex items-center justify-center gap-2 cursor-pointer hover:scale-105 transition-all duration-300"
+                                    className="flex items-center justify-center gap-3 cursor-pointer hover:scale-110 transition-all duration-300"
                                 >
-                                    <div className="w-12 h-6 bg-gray-600 rounded-full relative transition-all duration-300 pulse-glow">
+                                    <div className="w-16 h-8 bg-gray-600 rounded-full relative transition-all duration-300 pulse-glow">
                                         <div
-                                            className={`w-6 h-6 ${isLightMode ? 'bg-gradient-to-r from-yellow-400 to-orange-500' : 'bg-gradient-to-r from-blue-400 to-purple-500'} rounded-full absolute top-0 left-0 transition-all duration-300 ${isLightMode ? 'translate-x-6' : 'translate-x-0'} shadow-lg`}
-                                        ></div>
+                                            className={`w-8 h-8 ${isLightMode 
+                                                ? 'bg-gradient-to-r from-yellow-400 to-orange-500' 
+                                                : 'bg-gradient-to-r from-blue-400 to-purple-500'
+                                            } rounded-full absolute top-0 left-0 transition-all duration-300 ${
+                                                isLightMode ? 'translate-x-8' : 'translate-x-0'
+                                            } shadow-lg flex items-center justify-center`}
+                                        >
+                                            <i className={`${isLightMode ? 'fa-solid fa-sun' : 'fa-solid fa-moon'} text-white text-sm`}></i>
+                                        </div>
                                     </div>
-                                    <span className="text-xl">
+                                    <span className="text-xl font-mono">
                                         {isLightMode ? 'go dark' : 'go light'}
                                     </span>
                                 </div>
@@ -163,34 +226,38 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </div>
             )}
 
-            <div className="absolute bottom-0 left-0 p-4">
-                <span
-                    className="text-white text-sm font-mono inline-block gradient-text bg-gradient-to-r from-blue-400 to-purple-500 px-3 py-1 rounded-full glass-dark"
-                    style={{
-                        minWidth: '12ch',
-                        textShadow: isLightMode ? '1px 2px 1px rgba(0,0,0,1)' : 'none'
-                    }}
-                >
-                    {displayText}
-                </span>
+            {/* Enhanced Typewriter Display */}
+            <div className="absolute bottom-8 left-8">
+                <div className="flex items-center gap-3">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span
+                        className="text-white text-lg font-mono inline-block gradient-text bg-gradient-to-r from-blue-400 to-purple-500 px-4 py-2 rounded-full glass-dark border border-white/20"
+                        style={{
+                            minWidth: '15ch',
+                            textShadow: isLightMode ? '1px 2px 1px rgba(0,0,0,1)' : 'none'
+                        }}
+                    >
+                        {displayText}<span className="animate-pulse">|</span>
+                    </span>
+                </div>
             </div>
 
+            {/* Enhanced Main Content */}
             <div
-                className="absolute inset-0 flex flex-col items-center justify-center text-center gap-4 px-4"
+                className="absolute inset-0 flex flex-col items-center justify-center text-center gap-6 px-4"
                 style={{ perspective: '1000px' }}
             >
                 <div className="relative">
-                    {/* Tooltip Icon */}
+                    {/* Enhanced Tooltip */}
                     <div
-                        className="absolute -top-6 -right-8 cursor-pointer interactive"
+                        className="absolute -top-8 -right-10 cursor-pointer interactive z-10"
                         onMouseEnter={!isTouchDevice ? () => setShowTooltip(true) : undefined}
                         onMouseLeave={!isTouchDevice ? () => setShowTooltip(false) : undefined}
                         onClick={() => setShowTooltip((prev) => !prev)}
                     >
                         <span
-                            className="text-white text-lg font-bold mr-4 w-8 h-8 rounded-full glass-dark flex items-center justify-center hover:scale-110 transition-all duration-300"
+                            className="text-white text-lg font-bold w-10 h-10 rounded-full glass-dark flex items-center justify-center hover:scale-125 transition-all duration-300 pulse-glow border border-white/20"
                             style={{
-                                minWidth: '12ch',
                                 color: isLightMode ? 'black' : 'white'
                             }}
                         >
@@ -198,18 +265,20 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         </span>
                         {showTooltip && (
                             <div
-                                className={`absolute -top-10 right-0 w-48 p-3 text-xs rounded-lg shadow-xl transition-all duration-300 z-10 animate-fade-in
-            ${isLightMode
+                                className={`absolute -top-12 right-0 w-56 p-4 text-sm rounded-xl shadow-2xl transition-all duration-500 z-20 animate-fade-in transform-gpu ${
+                                    isLightMode
                                         ? 'glass border border-gray-300 text-black'
-                                    : 'glass-dark border border-white/20 text-white'
-                                    }`}
+                                        : 'glass-dark border border-white/20 text-white'
+                                }`}
                             >
-                                The order has no significance, just thought it looked cooler!
+                                The order has no significance, just thought it looked cooler! ✨
+                                <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
                             </div>
                         )}
-
                     </div>
-                    <div className="sliding-text-block four-words mr-20">
+
+                    {/* Enhanced Sliding Text */}
+                    <div className="sliding-text-block four-words mr-20 transform-gpu">
                         <ul className="Words">
                             <li className="Words-line">
                                 <p className="dev-3d">&nbsp;</p>
@@ -236,14 +305,15 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 </div>
             </div>
 
+            {/* Enhanced Social Panel */}
             <div className="fixed left-0 top-1/2 -translate-y-1/2 z-50">
-                <button onClick={toggleSocialArrow} className="focus:outline-none">
+                <button onClick={toggleSocialArrow} className="focus:outline-none group">
                     <div
-                        className="w-10 glass-dark p-1 rounded-r-lg transition-all ease-in-out duration-700 flex flex-col items-center hover:scale-105 border-r border-white/20"
+                        className="w-12 glass-dark p-2 rounded-r-xl transition-all ease-in-out duration-700 flex flex-col items-center hover:scale-105 border-r border-white/20 shadow-lg group-hover:shadow-xl"
                         style={{
                             transform: isSocialArrowActive
                                 ? 'translateX(0)'
-                                : 'translateX(calc(-100% + 2rem))',
+                                : 'translateX(calc(-100% + 2.5rem))',
                         }}
                     >
                         {!isSocialArrowActive ? (
@@ -253,21 +323,21 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                         writingMode: 'vertical-rl',
                                         textOrientation: 'mixed',
                                     }}
-                                    className="text-white text-[0.5rem] leading-none font-mono"
+                                    className="text-white text-xs leading-none font-mono gradient-text"
                                 >
                                     SOCIALS
                                 </span>
-                                <i className="fa-solid fa-arrow-right text-white mt-1 text-xs hover:text-blue-400 transition-colors duration-300"></i>
+                                <i className="fa-solid fa-arrow-right text-white mt-2 text-sm hover:text-blue-400 transition-colors duration-300 animate-pulse"></i>
                             </>
                         ) : (
                             <>
-                                <ul className="flex flex-col gap-2 text-white text-xs">
+                                <ul className="flex flex-col gap-4 text-white text-lg">
                                     <li>
                                         <a
                                             href="https://github.com/meerocodes"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="hover:text-blue-400 transition-all duration-300 hover:scale-125 block"
+                                            className="hover:text-blue-400 transition-all duration-300 hover:scale-150 block pulse-glow"
                                         >
                                             <i className="fa-brands fa-github-alt"></i>
                                         </a>
@@ -277,7 +347,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                             href="mailto:amir.ar@outook.com"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="hover:text-blue-400 transition-all duration-300 hover:scale-125 block"
+                                            className="hover:text-blue-400 transition-all duration-300 hover:scale-150 block pulse-glow"
                                         >
                                             <i className="fa-solid fa-inbox"></i>
                                         </a>
@@ -287,13 +357,13 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                             href="https://www.linkedin.com/in/meerocodes"
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="hover:text-blue-400 transition-all duration-300 hover:scale-125 block"
+                                            className="hover:text-blue-400 transition-all duration-300 hover:scale-150 block pulse-glow"
                                         >
                                             <i className="fa-brands fa-linkedin-in"></i>
                                         </a>
                                     </li>
                                 </ul>
-                                <i className="fa-solid fa-arrow-left text-white mt-2 text-xs hover:text-blue-400 transition-colors duration-300"></i>
+                                <i className="fa-solid fa-arrow-left text-white mt-3 text-sm hover:text-blue-400 transition-colors duration-300 animate-pulse"></i>
                             </>
                         )}
                     </div>
@@ -302,24 +372,33 @@ const Header = ({ isLightMode, toggleLightMode }) => {
 
             <style jsx>{`
                 .animate-fade-in {
-                    animation: fadeIn 0.3s ease-out forwards;
+                    animation: fadeIn 0.5s ease-out forwards;
                 }
                 @keyframes fadeIn {
                     from { opacity: 0; }
                     to { opacity: 1; }
                 }
                 .animate-slide-in {
-                    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                    animation: slideIn 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
                 }
                 @keyframes slideIn {
                     from {
-                        transform: translateY(-20px) scale(0.95);
+                        transform: translateY(-30px) scale(0.9);
                         opacity: 0;
                     }
                     to {
                         transform: translateY(0) scale(1);
                         opacity: 1;
                     }
+                }
+                .particle {
+                    animation: particle-float linear infinite;
+                }
+                @keyframes particle-float {
+                    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
                 }
             `}</style>
         </header>

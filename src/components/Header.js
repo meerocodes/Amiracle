@@ -308,14 +308,14 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         </span>
                         {showTooltip && (
                             <div
-                                className={`absolute -top-12 left-1/2 transform -translate-x-1/2 w-56 p-4 text-sm rounded-xl shadow-2xl transition-all duration-500 z-20 animate-fade-in transform-gpu ${
+                                className={`absolute -top-12 right-full mr-2 w-56 p-4 text-sm rounded-xl shadow-2xl transition-all duration-500 z-20 animate-fade-in transform-gpu ${
                                     isLightMode
                                         ? 'glass border border-gray-300 text-black'
                                         : 'glass-dark border border-white/20 text-white'
                                 }`}
                             >
                                 The order has no significance, just thought it looked cooler! ✨
-                                <div className="absolute top-4 left-full w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-white/20"></div>
+                                <div className="absolute top-4 left-full w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-gray-400"></div>
                             </div>
                         )}
                     </div>

@@ -53,6 +53,7 @@ const projectsData = [
 const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
     const cardRef = useRef(null);
     const [isVisible, setIsVisible] = React.useState(false);
+    const [isHovered, setIsHovered] = React.useState(false);
 
     React.useEffect(() => {
         const observer = new IntersectionObserver(
@@ -81,80 +82,84 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
     return (
         <div
             ref={cardRef}
-            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} mb-16`}
+            className={`relative transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} mb-16 card-hover`}
             style={{ transitionDelay: `${index * 100}ms` }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="group w-full h-96 md:h-80" style={{ perspective: '1000px' }}>
-                <div className="relative w-full h-full transition-transform duration-700" style={{ transformStyle: 'preserve-3d' }}>
-                    <div className="absolute w-full h-full" style={{ backfaceVisibility: 'hidden' }}>
+            <div className="group w-full h-96 md:h-80 rounded-xl overflow-hidden" style={{ perspective: '1000px' }}>
+                <div className={`relative w-full h-full transition-transform duration-700 ${isHovered ? 'rotate-y-180' : ''}`} style={{ transformStyle: 'preserve-3d' }}>
+                    <div className="absolute w-full h-full rounded-xl overflow-hidden" style={{ backfaceVisibility: 'hidden' }}>
                         <img
                             src={`${process.env.PUBLIC_URL}${project.image}`}
                             alt={project.alt}
-                            className="w-full h-full object-cover rounded-lg transition-transform duration-500 hover:scale-105"
+                            className="w-full h-full object-cover transition-transform duration-500"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                        <div className="absolute bottom-4 left-4 right-4">
+                            <h3 className="text-white font-bold text-lg mb-2 font-mono">{project.tech.split(' | ')[0]}</h3>
+                            <div className="flex gap-2">
+                                <span className="px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs text-white">Hover to flip</span>
+                            </div>
+                        </div>
                     </div>
                     <div
                         className={`absolute w-full h-full ${isLightMode
-                                ? 'bg-white/90 text-gray-900 flex flex-col justify-between p-4 rounded-lg border border-gray-300 shadow-lg overflow-auto'
-                                : 'bg-gradient-to-b from-yellow-200/80 to-yellow-400/70 text-gray-900 flex flex-col justify-between p-4 rounded-lg border-4 border-yellow-500 shadow-lg overflow-auto'
-                            }`}
+                                ? 'glass text-gray-900 flex flex-col justify-between p-6 rounded-xl border-2 border-white/30 shadow-xl overflow-auto'
+                                : 'glass-dark text-white flex flex-col justify-between p-6 rounded-xl border-2 border-white/20 shadow-xl overflow-auto'
+                            } backdrop-blur-lg`}
                         style={{
                             backfaceVisibility: 'hidden',
                             transform: 'rotateY(180deg)',
                         }}
                     >
-                        <div className="flex justify-between items-center mb-2">
-                            <div className="w-12 h-12">
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="w-12 h-12 float">
                                 <img
                                     src={`${process.env.PUBLIC_URL}/finalLogoLightMode.svg`}
                                     alt="Logo"
-                                    className="object-contain"
+                                    className="object-contain filter drop-shadow-lg"
                                 />
                             </div>
-                            <span className="text-xs font-bold tracking-wide uppercase">Project</span>
+                            <span className="text-xs font-bold tracking-wide uppercase px-3 py-1 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white">Project</span>
                         </div>
-                        <div className="text-center mb-2">
-                            <h4 className="mb-1 text-lg font-bold font-mono">{project.tech}</h4>
-                            <p className="text-xs font-mono">{project.description}</p>
+                        <div className="text-center mb-4">
+                            <h4 className="mb-3 text-lg font-bold font-mono gradient-text">{project.tech}</h4>
+                            <p className={`text-sm leading-relaxed ${isLightMode ? 'text-gray-800 font-medium' : 'text-gray-200'}`}>{project.description}</p>
                         </div>
-                        <div className="space-y-2 mb-2">
+                        <div className="space-y-3 mb-4">
                             <div className="flex justify-between items-center">
-                                <span className="text-xs font-mono">XP Gained:</span>
-                                <span className="text-xs font-mono font-bold">{xp} XP</span>
+                                <span className={`text-sm font-mono ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}>XP Gained:</span>
+                                <span className="text-sm font-mono font-bold text-green-400">{xp} XP</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-xs font-mono">Life Left:</span>
-                                <div className="w-32 bg-gray-300 rounded-full h-2">
-                                    <div className="bg-green-500 h-2 rounded-full" style={{ width: `${life}%` }}></div>
+                                <span className={`text-sm font-mono ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}>Progress:</span>
+                                <div className="w-32 bg-gray-300/30 rounded-full h-3 overflow-hidden">
+                                    <div className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-1000" style={{ width: `${life}%` }}></div>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-around">
+                        <div className="flex gap-3">
                             <a
                                 href={project.repo}
-                                className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:scale-105 transition-transform"
+                                className="flex-1 px-4 py-2 bg-gradient-to-r from-gray-600 to-gray-700 text-white text-sm rounded-full hover:scale-105 transition-all duration-300 text-center font-mono btn-modern"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                View Repo
+                                <i className="fa-brands fa-github mr-2"></i>Repo
                             </a>
                             <a
                                 href={project.live}
-                                className="px-3 py-1 bg-yellow-500 text-white text-xs rounded hover:scale-105 transition-transform"
+                                className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-sm rounded-full hover:scale-105 transition-all duration-300 text-center font-mono btn-modern"
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Live Demo
+                                <i className="fa-solid fa-external-link mr-2"></i>Live
                             </a>
                         </div>
                     </div>
 
                 </div>
-                <style jsx>{`
-                    .group:hover > div {
-                        transform: rotateY(180deg);
-                    }
-                `}</style>
             </div>
         </div>
     );
@@ -162,6 +167,24 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
 
 const Projects = ({ isLightMode }) => {
     const sectionRef = useRef(null);
+    const [isVisible, setIsVisible] = React.useState(false);
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true);
+                }
+            },
+            { threshold: 0.2 }
+        );
+        
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+        
+        return () => observer.disconnect();
+    }, []);
 
     return (
         <section
@@ -170,19 +193,20 @@ const Projects = ({ isLightMode }) => {
             style={{
                 backgroundImage: `url(${isLightMode ? LightProjectBg : DarkProjectBg})`
             }}
-            className="relative border-t-8 transition-all duration-500 bg-cover min-h-screen pb-4"
+            className="relative border-t-8 section-transition bg-cover min-h-screen pb-4"
         >
-            <div className="w-11/12 sm:w-4/5 mx-auto flex flex-col items-center">
+            <div className={`w-11/12 sm:w-4/5 mx-auto flex flex-col items-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                 <h2
-                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg ${isLightMode ? 'text-gray-900 underline decoration-gray-700' : 'text-white'}`}
+                    className={`mt-12 text-4xl font-mono font-bold drop-shadow-lg mb-4 ${isLightMode ? 'text-gray-900' : 'gradient-text'}`}
                 >
                     {'<PROJECTS />'}
                 </h2>
-                <p className="mt-4 text-sm font-mono text-green-700/70">hover to view details</p>
+                <div className={`w-24 h-1 rounded-full mb-4 ${isLightMode ? 'bg-gradient-to-r from-gray-400 to-gray-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}></div>
+                <p className={`text-sm font-mono ${isLightMode ? 'text-gray-600' : 'text-gray-300'} mb-2`}>hover to view details</p>
                 <i
-                    className={`fa-solid fa-angle-down mt-4 text-2xl ${isLightMode ? 'text-gray-900' : 'text-white'}`}
+                    className={`fa-solid fa-angle-down text-2xl ${isLightMode ? 'text-gray-900' : 'text-white'} animate-bounce`}
                 ></i>
-                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16 w-full">
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-16 w-full stagger-animation">
                     {projectsData.map((project, index) => (
                         <ProjectCard
                             key={project.id}
@@ -194,6 +218,12 @@ const Projects = ({ isLightMode }) => {
                     ))}
                 </div>
             </div>
+            
+            <style jsx>{`
+                .rotate-y-180 {
+                    transform: rotateY(180deg);
+                }
+            `}</style>
         </section>
     );
 };

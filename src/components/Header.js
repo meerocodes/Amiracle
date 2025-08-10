@@ -314,7 +314,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                         : 'glass-dark border border-white/20 text-white'
                                 }`}
                             >
-                                The order has no significance, just thought it looked cooler! ✨
+                                 Just arranged for maximum Aura. 🚀
                                 <div className="absolute top-4 left-full w-0 h-0 border-t-4 border-b-4 border-l-4 border-transparent border-l-gray-400"></div>
                             </div>
                         )}

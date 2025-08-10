@@ -81,15 +81,17 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             className="relative bg-cover h-[100dvh] section-transition overflow-hidden"
         >
             {/* Animated particles */}
+            {/* Floating geometric shapes */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(20)].map((_, i) => (
+                {[...Array(8)].map((_, i) => (
                     <div
                         key={i}
-                        className="particle"
+                        className={`floating-shape floating-shape-${i % 4}`}
                         style={{
-                            left: `${Math.random() * 100}%`,
-                            animationDelay: `${Math.random() * 10}s`,
-                            animationDuration: `${10 + Math.random() * 10}s`
+                            left: `${10 + (i * 12)}%`,
+                            top: `${20 + (i * 8)}%`,
+                            animationDelay: `${i * 0.8}s`,
+                            animationDuration: `${8 + (i % 3) * 2}s`
                         }}
                     />
                 ))}

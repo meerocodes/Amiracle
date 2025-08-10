@@ -84,7 +84,7 @@ const Skills = ({ isLightMode }) => {
                 <div className={`w-24 h-1 rounded-full mb-8 ${isLightMode ? 'bg-gradient-to-r from-gray-400 to-gray-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}></div>
                 <button
                     onClick={handleUnlock}
-                    className="px-8 py-4 rounded-full btn-modern font-bold font-mono shadow-2xl transform hover:scale-110 pulse-glow"
+                    className="px-8 py-4 rounded-full btn-modern font-bold font-mono shadow-2xl transform hover:scale-110 pulse-glow relative group"
                     style={{
                         background: isLightMode 
                             ? 'linear-gradient(135deg, #f3f4f6, #e5e7eb)' 
@@ -93,9 +93,23 @@ const Skills = ({ isLightMode }) => {
                         color: isLightMode ? '#16a34a' : '#ffffff'
                     }}
                 >
+                    {/* Progress indicator */}
+                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
+                        {unlockedCategoryCount}/{categoryOrder.length}
+                    </div>
+                    
                     {unlockedCategoryCount < categoryOrder.length
                         ? '<unlock skills/>'
                         : '<lock skills/>'}
+                    
+                    {/* Instruction text */}
+                    {unlockedCategoryCount > 0 && unlockedCategoryCount < categoryOrder.length && (
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                            <span className={`${isLightMode ? 'text-gray-600' : 'text-gray-300'}`}>
+                                Click again to unlock more skills
+                            </span>
+                        </div>
+                    )}
                 </button>
             </div>
 

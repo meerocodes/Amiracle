@@ -96,7 +96,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                         {[...Array(8)].map((_, j) => (
                             <div
                                 key={j}
-                                className="code-char"
+                                className={`code-char ${isLightMode ? 'code-char-light' : ''}`}
                                 style={{
                                     animationDelay: `${j * 0.1}s`
                                 }}
@@ -263,13 +263,17 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                 <div className="relative">
                     {/* Enhanced Tooltip */}
                     <div
-                        className="absolute -top-8 -right-10 cursor-pointer interactive z-10"
+                        className="absolute -top-8 -right-10 cursor-pointer interactive z-10 hidden sm:block"
                         onMouseEnter={!isTouchDevice ? () => setShowTooltip(true) : undefined}
                         onMouseLeave={!isTouchDevice ? () => setShowTooltip(false) : undefined}
                         onClick={() => setShowTooltip((prev) => !prev)}
                     >
                         <span
-                            className="text-white text-lg font-bold w-10 h-10 rounded-full glass-dark flex items-center justify-center hover:scale-125 transition-all duration-300 pulse-glow border border-white/20"
+                            className={`text-lg font-bold w-10 h-10 rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 pulse-glow border ${
+                                isLightMode 
+                                    ? 'text-gray-800 glass border-gray-300 shadow-lg' 
+                                    : 'text-white glass-dark border-white/20'
+                            }`}
                             style={{
                                 color: isLightMode ? 'black' : 'white'
                             }}
@@ -286,6 +290,32 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                             >
                                 The order has no significance, just thought it looked cooler! ✨
                                 <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Mobile Tooltip - Positioned differently */}
+                    <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 cursor-pointer interactive z-10 sm:hidden">
+                        <span
+                            className={`text-lg font-bold w-10 h-10 rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 pulse-glow border ${
+                                isLightMode 
+                                    ? 'text-gray-800 glass border-gray-300 shadow-lg' 
+                                    : 'text-white glass-dark border-white/20'
+                            }`}
+                            onClick={() => setShowTooltip((prev) => !prev)}
+                        >
+                            ?
+                        </span>
+                        {showTooltip && (
+                            <div
+                                className={`absolute -top-12 left-1/2 transform -translate-x-1/2 w-56 p-4 text-sm rounded-xl shadow-2xl transition-all duration-500 z-20 animate-fade-in transform-gpu ${
+                                    isLightMode
+                                        ? 'glass border border-gray-300 text-black'
+                                        : 'glass-dark border border-white/20 text-white'
+                                }`}
+                            >
+                                The order has no significance, just thought it looked cooler! ✨
+                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
                             </div>
                         )}
                     </div>

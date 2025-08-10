@@ -125,15 +125,15 @@ const ProjectCard = ({ project, index, totalProjects, isLightMode }) => {
                         </div>
                         <div className="text-center mb-4">
                             <h4 className="mb-3 text-lg font-bold font-mono gradient-text">{project.tech}</h4>
-                            <p className="text-sm leading-relaxed">{project.description}</p>
+                            <p className={`text-sm leading-relaxed ${isLightMode ? 'text-gray-800 font-medium' : 'text-gray-200'}`}>{project.description}</p>
                         </div>
                         <div className="space-y-3 mb-4">
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-mono">XP Gained:</span>
+                                <span className={`text-sm font-mono ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}>XP Gained:</span>
                                 <span className="text-sm font-mono font-bold text-green-400">{xp} XP</span>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-mono">Progress:</span>
+                                <span className={`text-sm font-mono ${isLightMode ? 'text-gray-700' : 'text-gray-300'}`}>Progress:</span>
                                 <div className="w-32 bg-gray-300/30 rounded-full h-3 overflow-hidden">
                                     <div className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-1000" style={{ width: `${life}%` }}></div>
                                 </div>

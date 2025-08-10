@@ -82,6 +82,31 @@ const Skills = ({ isLightMode }) => {
                     {'<SKILLS />'}
                 </h2>
                 <div className={`w-24 h-1 rounded-full mb-8 ${isLightMode ? 'bg-gradient-to-r from-gray-400 to-gray-600' : 'bg-gradient-to-r from-blue-400 to-purple-500'}`}></div>
+                
+                {/* Progress Indicator */}
+                <div className="mb-6 flex items-center gap-4">
+                    <span className={`text-sm font-mono ${isLightMode ? 'text-gray-600' : 'text-gray-300'}`}>
+                        Skills Unlocked:
+                    </span>
+                    <div className="flex gap-2">
+                        {categoryOrder.map((_, index) => (
+                            <div
+                                key={index}
+                                className={`w-4 h-4 rounded-full transition-all duration-500 ${
+                                    index < unlockedCategoryCount
+                                        ? 'bg-gradient-to-r from-green-400 to-blue-500 scale-110 shadow-lg'
+                                        : isLightMode 
+                                            ? 'bg-gray-300 border-2 border-gray-400' 
+                                            : 'bg-gray-600 border-2 border-gray-500'
+                                }`}
+                            />
+                        ))}
+                    </div>
+                    <span className={`text-sm font-mono font-bold ${isLightMode ? 'text-gray-800' : 'text-white'}`}>
+                        {unlockedCategoryCount}/{categoryOrder.length}
+                    </span>
+                </div>
+                
                 <button
                     onClick={handleUnlock}
                     className="px-8 py-4 rounded-full btn-modern font-bold font-mono shadow-2xl transform hover:scale-110 pulse-glow relative group"
@@ -93,11 +118,6 @@ const Skills = ({ isLightMode }) => {
                         color: isLightMode ? '#16a34a' : '#ffffff'
                     }}
                 >
-                    {/* Progress indicator */}
-                    <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white">
-                        {unlockedCategoryCount}/{categoryOrder.length}
-                    </div>
-                    
                     {unlockedCategoryCount < categoryOrder.length
                         ? '<unlock skills/>'
                         : '<lock skills/>'}
@@ -107,6 +127,15 @@ const Skills = ({ isLightMode }) => {
                         <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
                             <span className={`${isLightMode ? 'text-gray-600' : 'text-gray-300'}`}>
                                 Click again to unlock more skills
+                            </span>
+                        </div>
+                    )}
+                    
+                    {/* Initial instruction for first-time users */}
+                    {unlockedCategoryCount === 0 && (
+                        <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                            <span className={`${isLightMode ? 'text-gray-600' : 'text-gray-300'}`}>
+                                Click to start unlocking skills
                             </span>
                         </div>
                     )}

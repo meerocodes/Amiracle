@@ -127,58 +127,74 @@ html, body {
 }
 
 /* Floating Geometric Shapes */
-.floating-shape {
+.code-rain-column {
     position: absolute;
-    opacity: 0.6;
-    filter: blur(0.5px);
-    animation: float-geometric ease-in-out infinite;
+    top: -100px;
+    width: 20px;
+    height: 100vh;
+    animation: code-rain linear infinite;
+    opacity: 0.4;
 }
 
-.floating-shape-0 {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(45deg, rgba(0, 212, 255, 0.3), rgba(179, 71, 217, 0.3));
-    border-radius: 12px;
-    transform: rotate(45deg);
+.code-char {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(0, 212, 255, 0.6);
+    text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+    margin-bottom: 15px;
+    animation: char-glow 2s ease-in-out infinite alternate;
 }
 
-.floating-shape-1 {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, rgba(57, 255, 20, 0.3), rgba(0, 212, 255, 0.3));
-    border-radius: 50%;
-}
-
-.floating-shape-2 {
-    width: 80px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(179, 71, 217, 0.5), transparent);
-    border-radius: 1px;
-}
-
-.floating-shape-3 {
-    width: 50px;
-    height: 50px;
-    background: linear-gradient(225deg, rgba(0, 212, 255, 0.2), rgba(57, 255, 20, 0.2));
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-
-@keyframes float-geometric {
-    0%, 100% { 
-        transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
+@keyframes code-rain {
+    0% {
+        transform: translateY(-100vh);
+        opacity: 0;
+    }
+    10% {
         opacity: 0.6;
     }
-    25% { 
-        transform: translateY(-20px) translateX(10px) rotate(90deg) scale(1.1);
-        opacity: 0.8;
+    90% {
+        opacity: 0.6;
     }
-    50% { 
-        transform: translateY(-10px) translateX(-5px) rotate(180deg) scale(0.9);
-        opacity: 0.4;
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
     }
-    75% { 
-        transform: translateY(-30px) translateX(15px) rotate(270deg) scale(1.05);
-        opacity: 0.7;
+}
+
+@keyframes char-glow {
+    0% {
+        color: rgba(0, 212, 255, 0.4);
+        text-shadow: 0 0 5px rgba(0, 212, 255, 0.4);
+    }
+    100% {
+        color: rgba(0, 212, 255, 0.8);
+        text-shadow: 0 0 15px rgba(0, 212, 255, 0.8), 0 0 25px rgba(179, 71, 217, 0.4);
+    }
+}
+
+/* Responsive adjustments for code rain */
+@media (max-width: 768px) {
+    .code-rain-column {
+        width: 15px;
+    }
+    
+    .code-char {
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .code-rain-column {
+        width: 12px;
+    }
+    
+    .code-char {
+        font-size: 10px;
+        margin-bottom: 10px;
     }
 }
 

@@ -81,19 +81,30 @@ const Header = ({ isLightMode, toggleLightMode }) => {
             className="relative bg-cover h-[100dvh] section-transition overflow-hidden"
         >
             {/* Animated particles */}
-            {/* Floating geometric shapes */}
+            {/* Refined Matrix-style Code Rain */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(8)].map((_, i) => (
+                {[...Array(12)].map((_, i) => (
                     <div
                         key={i}
-                        className={`floating-shape floating-shape-${i % 4}`}
+                        className="code-rain-column"
                         style={{
-                            left: `${10 + (i * 12)}%`,
-                            top: `${20 + (i * 8)}%`,
-                            animationDelay: `${i * 0.8}s`,
-                            animationDuration: `${8 + (i % 3) * 2}s`
+                            left: `${5 + (i * 8)}%`,
+                            animationDelay: `${i * 0.5}s`,
+                            animationDuration: `${4 + (i % 3)}s`
                         }}
-                    />
+                    >
+                        {[...Array(8)].map((_, j) => (
+                            <div
+                                key={j}
+                                className="code-char"
+                                style={{
+                                    animationDelay: `${j * 0.1}s`
+                                }}
+                            >
+                                {['<', '>', '/', '{', '}', '(', ')', ';', '=', '+', '-', '*'][Math.floor(Math.random() * 12)]}
+                            </div>
+                        ))}
+                    </div>
                 ))}
             </div>
 

@@ -295,7 +295,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                     </div>
 
                     {/* Mobile Tooltip - Positioned differently */}
-                    <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 cursor-pointer interactive z-10 sm:hidden">
+                    <div className="absolute -top-16 right-0 cursor-pointer interactive z-10 sm:hidden">
                         <span
                             className={`text-lg font-bold w-10 h-10 rounded-full flex items-center justify-center hover:scale-125 transition-all duration-300 pulse-glow border ${
                                 isLightMode 
@@ -315,7 +315,7 @@ const Header = ({ isLightMode, toggleLightMode }) => {
                                 }`}
                             >
                                 The order has no significance, just thought it looked cooler! ✨
-                                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
+                                <div className="absolute top-full right-8 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white/20"></div>
                             </div>
                         )}
                     </div>

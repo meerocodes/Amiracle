@@ -30,7 +30,7 @@ function App() {
         <Projects isLightMode={isLightMode} />
         <Contact isLightMode={isLightMode} />
       </main>
-      <Footer />
+      <Footer isLightMode={isLightMode} />
     </div>
   );
 }
